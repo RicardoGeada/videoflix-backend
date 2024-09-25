@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "debug_toolbar",
+    "django_rq",
 ]
 
 MIDDLEWARE = [
@@ -130,7 +131,10 @@ CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://127.0.0.1:6379/1",
-        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
+        "OPTIONS": {
+            "PASSWORD": "foobared",
+            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+            },
         "KEY_PREFIX": "videoflix",
     }
 }
@@ -139,3 +143,15 @@ CACHES = {
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+
+# Django RQ
+RQ_QUEUES = {
+    "default": {
+        "HOST": "localhost",
+        "PORT": 6379,
+        "DB": 0,
+        "PASSWORD": "foobared",
+        "DEFAULT_TIMEOUT": 360,
+    },
+}
