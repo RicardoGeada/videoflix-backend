@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "django_rq",
     "import_export",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -74,6 +75,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "videoflix_backend.wsgi.application"
+
+# AUTH_USER_MODEL
+AUTH_USER_MODEL = "users.CustomUser"
 
 
 # Database
