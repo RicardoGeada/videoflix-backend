@@ -20,6 +20,7 @@ class CustomUserManager(BaseUserManager):
         """Create and return a superuser with an email and password."""
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_active', True)
         
         if not password:
             raise ValueError('The Password field must be set')
@@ -38,7 +39,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=30, blank=True)
     
     phone = models.CharField(max_length=15, blank=True, null=True)
-    address = models.CharField(max_length=200, default='')
+    address = models.CharField(max_length=200, blank=True, null=True)
     
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)

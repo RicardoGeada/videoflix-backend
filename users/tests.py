@@ -18,7 +18,7 @@ class CustomUserModelTest(TestCase):
         self.assertEqual(new_user.first_name, '')
         self.assertEqual(new_user.last_name, '')
         self.assertEqual(new_user.phone, None)
-        self.assertEqual(new_user.address, '')
+        self.assertEqual(new_user.address, None)
         
         self.assertEqual(new_user.is_active, False)
         self.assertEqual(new_user.is_staff, False)
@@ -36,9 +36,9 @@ class CustomUserModelTest(TestCase):
         self.assertEqual(new_user.first_name, '')
         self.assertEqual(new_user.last_name, '')
         self.assertEqual(new_user.phone, None)
-        self.assertEqual(new_user.address, '')
+        self.assertEqual(new_user.address, None)
         
-        self.assertEqual(new_user.is_active, False)
+        self.assertEqual(new_user.is_active, True)
         self.assertEqual(new_user.is_staff, True)
         self.assertEqual(new_user.is_superuser, True)
 
