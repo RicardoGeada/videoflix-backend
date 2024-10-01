@@ -1,12 +1,10 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import RegisterView
+from .views import RegisterView, ActivateAccount
 
 router = DefaultRouter()
-# router.register(r'users', CustomUserViewSet, basename='user')
 
 urlpatterns = [
-    # path('', include(router.urls)),
-    # path('login/', LoginView.as_view(), name='login'),
-    path('register/', RegisterView.as_view(), name='register')
+    path('register/', RegisterView.as_view(), name='register'),
+    path('activate/<uidb64>/<token>/', ActivateAccount.as_view(), name='activate_account')
 ]
