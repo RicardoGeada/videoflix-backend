@@ -197,3 +197,139 @@ class LoginViewTests(APITestCase):
         self.assertEqual(refresh_response.status_code, status.HTTP_200_OK)
         self.assertIn('access', refresh_response.data)
         self.assertNotEqual(access_token, refresh_response.data['access'])
+
+
+
+class PasswordResetTests(APITestCase):
+    
+    def setUp(self):
+        self.activated_user=CustomUser.objects.create_user(email='activateduser@mail.com', password='activated', is_active=True)
+        self.unactivated_user=CustomUser.objects.create_user(email='unactivateduser@mail.com', password='unactivated', is_active=False)
+        mail.outbox = [] # empty mailbox from activation email for unactivated_user
+        
+    
+    # reset_password
+    
+    def test_email_with_password_reset_link_send(self):
+        """
+        Ensure a password reset link gets created.
+        """
+        url = reverse('password_reset')
+        data = {
+            'email' : self.activated_user.email,
+        }
+        response = self.client.post(url, data, format='json')
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn('Reset your password', mail.outbox[0].subject)
+        
+    
+    def test_password_reset_with_non_existent_email(self):
+        """
+        Ensure that no error is raised when a non-existent email is provided.
+        """
+        url = reverse('password_reset')
+        data = {
+            'email': 'nonexistent@mail.com',
+        }
+        response = self.client.post(url, data, format='json')
+
+        # no information for the user if the email exists
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # no email sent, because the user doesn't exist
+        self.assertEqual(len(mail.outbox), 0)
+        
+    
+    # reset_password_confirm
+    
+    def test_password_reset_confirm_success(self):
+        """
+        Ensure the password reset confirm works with an apropriate link.
+        """
+        uidb64 = urlsafe_base64_encode(force_bytes(self.activated_user.pk))
+        token = default_token_generator.make_token(self.activated_user) 
+        
+        url = reverse('password_reset_confirm', kwargs={'uidb64': uidb64, 'token': token})
+        data = {
+            'new_password': 'newpassword',
+            'uidb64': uidb64, 
+            'token': token,
+        }
+        response = self.client.post(url, data, format='json')
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.activated_user.refresh_from_db()
+        self.assertTrue(self.activated_user.check_password(data['new_password']))
+        
+
+    def test_password_reset_confirm_with_invalid_token(self):
+        """
+        Ensure password reset fails with an invalid token.
+        """
+        uidb64 = urlsafe_base64_encode(force_bytes(self.activated_user.pk))
+        invalid_token = 'invalid-token'
+        url = reverse('password_reset_confirm', kwargs={'uidb64': uidb64, 'token': invalid_token})
+        data = {
+            'new_password': 'newpassword',
+            'uidb64': uidb64,
+            'token': invalid_token,
+        }
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        
+    
+    def test_password_reset_confirm_with_invalid_uid(self):
+        """
+        Ensure password reset fails with an invalid uid.
+        """
+        invalid_uidb64 = 'invalid-uid'  # Setze eine ungültige UID
+        token = default_token_generator.make_token(self.activated_user)
+        url = reverse('password_reset_confirm', kwargs={'uidb64': invalid_uidb64, 'token': token})
+        data = {
+            'new_password': 'newpassword',
+            'uidb64': invalid_uidb64,
+            'token': token,
+        }
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        
+    
+    def test_password_reset_confirm_with_missing_data(self):
+        """
+        Ensure password reset fails when required data is missing.
+        """
+        uidb64 = urlsafe_base64_encode(force_bytes(self.activated_user.pk))
+        token = default_token_generator.make_token(self.activated_user)
+
+        url = reverse('password_reset_confirm', kwargs={'uidb64': uidb64, 'token': token})
+        data = {
+            # 'new_password' 
+            'uidb64': uidb64,
+            'token': token,
+        }
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        
+    
+    def test_password_reset_for_inactive_user(self):
+        """
+        Ensure password reset does not work for inactive users.
+        """
+        uidb64 = urlsafe_base64_encode(force_bytes(self.unactivated_user.pk))
+        token = default_token_generator.make_token(self.unactivated_user)
+
+        url = reverse('password_reset_confirm', kwargs={'uidb64': uidb64, 'token': token})
+        data = {
+            'new_password': 'newpassword',
+            'uidb64': uidb64,
+            'token': token,
+        }
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+

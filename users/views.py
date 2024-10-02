@@ -3,7 +3,7 @@ from django.shortcuts import render
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import  AllowAny
 
-from .serializers import RegisterSerializer
+from .serializers import RegisterSerializer, PasswordResetSerializer, PasswordResetConfirmSerializer
 
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_decode
@@ -66,3 +66,27 @@ class LoginView(APIView):
             })
         else:
              return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+         
+
+class PasswordResetView(APIView):
+    serializer_class = PasswordResetSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"detail": "An email has been sent if an account with this email exists."}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+    
+class PasswordResetConfirmView(APIView):
+    serializer_class = PasswordResetConfirmSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"detail": "The password has been successfully reset."}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
