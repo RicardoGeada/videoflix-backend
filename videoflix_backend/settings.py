@@ -10,8 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
+from dotenv import load_dotenv
+from datetime import timedelta
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,9 +43,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "rest_framework_simplejwt",
     "debug_toolbar",
     "django_rq",
     "import_export",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -74,6 +80,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "videoflix_backend.wsgi.application"
+
+# AUTH_USER_MODEL
+AUTH_USER_MODEL = "users.CustomUser"
 
 
 # Database
@@ -165,3 +174,27 @@ RQ_QUEUES = {
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/staticfiles')
 
 IMPORT_EXPORT_USE_TRANSACTIONS = True
+
+
+# SMTP / Email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT'))
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
+
+# SIMPLE JWT
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+}
