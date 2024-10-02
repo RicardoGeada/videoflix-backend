@@ -12,6 +12,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import CustomUser
 
+from django.contrib.auth import authenticate
+from rest_framework_simplejwt.tokens import RefreshToken
+
 # Create your views here.
 class RegisterView(CreateAPIView):
     """
@@ -24,7 +27,10 @@ class RegisterView(CreateAPIView):
     
 
 
-class ActivateAccount(APIView):
+class ActivateAccountView(APIView):
+    """
+    View to activate user account via activation link.
+    """
     def post(self, request, uidb64, token):
         
         try:
@@ -39,3 +45,24 @@ class ActivateAccount(APIView):
             return Response({'message': 'Account activated successfully'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid activation link'}, status=status.HTTP_400_BAD_REQUEST)
+  
+ 
+        
+class LoginView(APIView):
+    """
+    View to login the user and receive refresh and access tokens for authentication.
+    """
+    def post(self, request):
+        email = request.data.get("email")
+        password = request.data.get("password")
+        user = authenticate(request, email=email, password=password)
+        
+        if user is not None:
+            # generate token
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            })
+        else:
+             return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)

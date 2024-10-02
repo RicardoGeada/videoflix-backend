@@ -84,7 +84,7 @@ class RegisterViewTests(APITestCase):
         self.assertIn('Confirm your email', mail.outbox[0].subject)
         
 
-class ActivationViewTest(APITestCase):
+class ActivationViewTests(APITestCase):
     
     def test_activate_user(self):
         """
@@ -107,3 +107,93 @@ class ActivationViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         new_user.refresh_from_db()
         self.assertTrue(new_user.is_active)
+        
+
+
+class LoginViewTests(APITestCase):
+    
+    def setUp(self):
+        self.activated_user=CustomUser.objects.create_user(email='activateduser@mail.com', password='activated', is_active=True)
+        self.unactivated_user=CustomUser.objects.create_user(email='unactivateduser@mail.com', password='unactivated', is_active=False)
+        
+    
+    def test_activated_user_can_login(self):
+        """
+        Ensure an activated user can login.
+        """
+        url = reverse('login')
+        data = {
+            'email' : self.activated_user.email,
+            'password': 'activated'
+        }
+        response = self.client.post(url, data, format='json')
+        
+        # check for login success
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # check for tokens in response
+        self.assertIn('access', response.data)
+        self.assertIn('refresh', response.data)
+        
+        
+        
+    def test_unactivated_user_cant_login(self):
+        """
+        Ensure an unactivated user can't login.
+        """
+        url = reverse('login')
+        data = {
+            'email' : self.unactivated_user.email,
+            'password': 'unactivated'
+        }
+        response = self.client.post(url, data, format='json')
+        
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        
+    
+    
+    # def test_access_token_authentification(self):
+    #     """
+    #     Ensure user can authenticate using the access token.
+    #     """
+    #     # login to get access token
+    #     url = reverse('login')
+    #     data = {
+    #         'email' : self.activated_user.email,
+    #         'password': 'activated'
+    #     }
+    #     response = self.client.post(url, data, format='json')
+    #     access_token = response.data['access']
+        
+    #     # authenticate to protected view via access token
+    #     protected_url = reverse('') # TODO: Insert protected view e.g. 'videos'
+    #     self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
+    #     protected_response = self.client.get(protected_url)
+        
+    #     self.assertEqual(protected_response.status_code, status.HTTP_200_OK)
+    
+    
+    def test_refresh_token_to_get_a_new_access_token(self):
+        """
+        Ensure user can use the refresh token to get a new access token.
+        """
+        # login to get a refresh token
+        url = reverse('login')
+        data = {
+            'email' : self.activated_user.email,
+            'password': 'activated'
+        }
+        response = self.client.post(url, data, format='json')
+        
+        access_token = response.data['access']
+        refresh_token = response.data['refresh']
+        
+        # get a new access_token from the refresh token
+        refresh_url = reverse('token_refresh')
+        refresh_data = {
+            'refresh': refresh_token
+        }
+        refresh_response = self.client.post(refresh_url, refresh_data, format='json')
+        
+        self.assertEqual(refresh_response.status_code, status.HTTP_200_OK)
+        self.assertIn('access', refresh_response.data)
+        self.assertNotEqual(access_token, refresh_response.data['access'])
