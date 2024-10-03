@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import date
 from .utils import video_upload_path
+from django.db.models.signals import post_save
 
 # Create your models here.
 class VideoModel(models.Model):
@@ -18,6 +19,7 @@ class VideoModel(models.Model):
         return self.title
     
     def save(self, *args, **kwargs):
+        is_new = self.id is None
 
         if not self.id:
             saved_file = self.video_file
@@ -26,3 +28,6 @@ class VideoModel(models.Model):
             self.video_file = saved_file 
 
         super().save(*args, **kwargs)
+        
+        if is_new:
+            post_save.send(sender=self.__class__, instance=self, created=True)
