@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "django_rq",
     "import_export",
     "users",
+    "content"
 ]
 
 MIDDLEWARE = [
@@ -198,3 +199,8 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
+
+
+# media folder for videos
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
