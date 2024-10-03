@@ -1,7 +1,7 @@
 from .models import VideoModel
 from django.dispatch import receiver
 from django.db.models.signals import post_delete, post_save
-from .tasks import convert_480p
+from .tasks import convert_480p, convert_to_hls, delete_file
 import os
 import shutil
 
@@ -21,5 +21,7 @@ def video_post_delete(sender, instance, **kwargs):
 @receiver(post_save,sender=VideoModel)
 def video_post_save(sender, instance, created, **kwargs):
     if created and instance.video_file:
-            convert_480p(instance.video_file.path)
+            converted_video = convert_480p(instance.video_file.path)
+            hls_output = convert_to_hls(converted_video)
+            delete_file(converted_video)
   
