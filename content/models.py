@@ -29,7 +29,7 @@ class VideoModel(models.Model):
         verbose_name_plural = "Videos"
     
     def __str__(self):
-        return self.title
+        return f'{self.id} - {self.title}'
     
     def save(self, *args, **kwargs):
         is_new = self.id is None
