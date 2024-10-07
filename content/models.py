@@ -42,8 +42,9 @@ class VideoModel(models.Model):
             super().save(*args, **kwargs)  
             self.video_file = saved_video_file 
             self.thumbnail_img = saved_thumbnail_file
-
-        super().save(*args, **kwargs)
+            super().save(update_fields=['video_file', 'thumbnail_img'])
+        else:
+            super().save(*args, **kwargs)
         
         if is_new:
             post_save.send(sender=self.__class__, instance=self, created=True)
