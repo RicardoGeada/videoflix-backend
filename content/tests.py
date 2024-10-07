@@ -153,3 +153,58 @@ class VideoListAPITests(APITestCase):
         self.assertEqual(response.data['results'][0]['title'], 'Video 4')
         self.assertEqual(response.data['results'][1]['title'], 'Video 5')
         
+        
+class VideoDetailAPITests(APITestCase):
+    
+    def setUp(self):
+        self.genre_action = GenreModel.objects.create(name='Action')
+        self.genre_comedy = GenreModel.objects.create(name='Comedy')
+        
+        self.video_1 = VideoModel.objects.create(title='Video 1', description='Description 1')
+        self.video_1.genres.set([self.genre_action])
+        self.video_2 = VideoModel.objects.create(title='Video 2', description='Description 2')
+        self.video_2.genres.set([self.genre_action])
+        self.video_3 = VideoModel.objects.create(title='Video 3', description='Description 3')
+        self.video_3.genres.set([self.genre_comedy])
+        self.video_4 = VideoModel.objects.create(title='Video 4', description='Description 4')
+        self.video_4.genres.set([self.genre_comedy])
+        self.video_5 = VideoModel.objects.create(title='Video 5', description='Description 5')
+        self.video_5.genres.set([self.genre_comedy])
+        
+        self.user = CustomUser.objects.create_user(email='test@user.com', password='testpassword', is_active=True)
+        
+        
+        
+    def authenticate_user(self):
+        """
+        Helper function to authenticate the test user and set the JWT token in the request header.
+        """
+        refresh = RefreshToken.for_user(self.user)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')   
+        
+        
+        
+    def test_unauthorized_access(self):
+        """
+        Ensure unauthorized users don't receive access.
+        """
+        url = reverse('video-detail', kwargs={'pk': self.video_3.pk})
+        response = self.client.get(url, format='json')
+        
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        
+    
+    
+    def test_get_video_detail(self):
+        """
+        Ensure authorized users can retrieve specific videos by id.
+        """
+        self.authenticate_user()
+        
+        url = reverse('video-detail', kwargs={'pk': self.video_3.pk})
+        response = self.client.get(url, format='json')
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['title'], self.video_3.title)
+        self.assertEqual(response.data['description'], self.video_3.description)
+        self.assertEqual(response.data['genres'], [2])
