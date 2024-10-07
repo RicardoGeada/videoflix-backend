@@ -10,10 +10,7 @@ class GenreModelSerializer(serializers.ModelSerializer):
 class VideoModelListSerializer(serializers.ModelSerializer):
     class Meta:
         model = VideoModel
-        fields = ['id', 'title', 'description', 'thumbnail_img', 'created_at']
+        fields = ['id', 'title', 'description', 'created_at']
         
-        
-class VideoModelDetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = VideoModel
-        fields = ['id', 'title', 'description', 'thumbnail_img', 'created_at']
+
+
