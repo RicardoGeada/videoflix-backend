@@ -7,10 +7,9 @@ import shutil
 
 @receiver(post_delete,sender= VideoModel)
 def video_post_delete(sender, instance, **kwargs):
-    if instance.video_file:
+    if instance.video_file or instance.thumbnail_img:
         
-        print(instance.video_file.path)
-        folder_path = os.path.dirname(instance.video_file.path)
+        folder_path = os.path.join('media', 'videos', str(instance.pk))
         
         if os.path.isdir(folder_path):
             try:

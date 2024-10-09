@@ -54,3 +54,4 @@ def create_master_playlist(instance):
     with open(master_playlist_path, 'w') as master_playlist_file:
         for line in playlist_content:
             master_playlist_file.write(line + "\n")
+            

@@ -2,6 +2,7 @@ from django.db import models
 from datetime import date
 from .utils import video_upload_path, thumbnail_upload_path
 from django.db.models.signals import post_save
+from .validators import ValidateFileSize, validate_jpeg_file
 
 # Create your models here.
 class GenreModel(models.Model):
@@ -22,7 +23,7 @@ class VideoModel(models.Model):
     description = models.CharField(max_length=500)
     video_file = models.FileField(upload_to=video_upload_path, blank=True, null=True)
     genres = models.ManyToManyField(GenreModel, related_name='videos')
-    thumbnail_img = models.FileField(upload_to=thumbnail_upload_path, blank=True, null=True)
+    thumbnail_img = models.ImageField(upload_to=thumbnail_upload_path, blank=True, null=True, validators=[validate_jpeg_file, ValidateFileSize(5)])
     
     class Meta:
         verbose_name = "Video"

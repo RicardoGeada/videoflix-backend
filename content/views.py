@@ -66,3 +66,4 @@ class VideoStreamView(APIView):
         response['Cache-Control'] = 'private, no-cache, no-store, must-revalidate'
         
         return response
+    
