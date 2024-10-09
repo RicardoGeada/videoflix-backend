@@ -19,6 +19,8 @@ from unittest import mock
 from PIL import Image
 import io
 
+from django.core.files.uploadedfile import SimpleUploadedFile
+
 # Create your tests here.
 class GenreAPITests(APITestCase):
     
@@ -164,7 +166,9 @@ class VideoListAPITests(APITestCase):
         
 class VideoDetailAPITests(APITestCase):
     
-    def setUp(self):
+    @mock.patch('content.signals.delete_file')
+    @mock.patch('content.signals.convert_to_hls')
+    def setUp(self, mock_convert, mock_delete_file):
         self.genre_action = GenreModel.objects.create(name='Action')
         self.genre_comedy = GenreModel.objects.create(name='Comedy')
         
@@ -172,7 +176,7 @@ class VideoDetailAPITests(APITestCase):
         self.video_1.genres.set([self.genre_action])
         self.video_2 = VideoModel.objects.create(title='Video 2', description='Description 2')
         self.video_2.genres.set([self.genre_action])
-        self.video_3 = VideoModel.objects.create(title='Video 3', description='Description 3')
+        self.video_3 = VideoModel.objects.create(title='Video 3', description='Description 3', video_file=SimpleUploadedFile("test_video.mp4", b"file_content", content_type="video/mp4"))
         self.video_3.genres.set([self.genre_comedy])
         self.video_4 = VideoModel.objects.create(title='Video 4', description='Description 4')
         self.video_4.genres.set([self.genre_comedy])
@@ -212,10 +216,21 @@ class VideoDetailAPITests(APITestCase):
         url = reverse('video-detail', kwargs={'pk': self.video_3.pk})
         response = self.client.get(url, format='json')
         
+        video_url = f"{response.wsgi_request.scheme}://{response.wsgi_request.get_host()}/api/videos/{self.video_3.id}/stream/"
+        
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['title'], self.video_3.title)
         self.assertEqual(response.data['description'], self.video_3.description)
         self.assertEqual(response.data['genres'], [2])
+        self.assertEqual(response.data['video_url'], video_url)
+        
+        
+    def tearDown(self):
+        """Clean Up test data after test."""
+        if self.video_3:
+            if os.path.exists(self.video_3.video_file.path):
+                os.remove(self.video_3.video_file.path)
+            shutil.rmtree(os.path.dirname(self.video_3.video_file.path), ignore_errors=True)
         
 
 class VideoStreamAPITests(APITestCase):
