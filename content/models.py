@@ -23,7 +23,7 @@ class VideoModel(models.Model):
     description = models.CharField(max_length=500)
     video_file = models.FileField(upload_to=video_upload_path, blank=True, null=True)
     genres = models.ManyToManyField(GenreModel, related_name='videos')
-    thumbnail_img = models.ImageField(upload_to=thumbnail_upload_path, blank=True, null=True, validators=[validate_jpeg_file, ValidateFileSize(5)])
+    thumbnail_img = models.ImageField(upload_to=thumbnail_upload_path, blank=True, null=True, validators=[validate_jpeg_file, ValidateFileSize(0.3)])
     
     class Meta:
         verbose_name = "Video"

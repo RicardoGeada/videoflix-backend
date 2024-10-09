@@ -9,7 +9,8 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.pagination import LimitOffsetPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.views import APIView
-from django.http import FileResponse, Http404
+from django.http import FileResponse, Http404, HttpResponse
+
 
 # Create your views here.
 class GenreModelViewSet(viewsets.ReadOnlyModelViewSet):
@@ -67,3 +68,25 @@ class VideoStreamView(APIView):
         
         return response
     
+
+
+class VideoThumbnailView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    
+    def get(self, request, pk, format=None):
+        video = get_object_or_404(VideoModel, id=pk)
+        
+        thumbnail_path = video.thumbnail_img.path
+        
+        if not os.path.exists(thumbnail_path):
+            raise Http404("Thumbnail not found")
+        
+        try:
+            with open(thumbnail_path, 'rb') as thumbnail_file:
+                image_data = thumbnail_file.read()
+                response = HttpResponse(image_data, content_type='image/jpeg')
+                response['Cache-Control'] = 'public, max-age=86400'
+                return response
+        except IOError:
+            raise Http404("Thumbnail not accessible")

@@ -1,9 +1,13 @@
 from django.core.exceptions import ValidationError
 from django.utils.deconstruct import deconstructible
 
+
+
 def validate_jpeg_file(value):
     if not value.name.lower().endswith('.jpeg') and not value.name.lower().endswith('.jpg'):
         raise ValidationError('The image must be in JPEG format.')
+    
+    
     
 @deconstructible
 class ValidateFileSize:
