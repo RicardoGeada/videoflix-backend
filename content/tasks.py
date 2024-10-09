@@ -10,8 +10,10 @@ def convert_to_hls(instance, resolution):
     source = instance.video_file.path
     
     clean_title = instance.title.replace(' ', '_').lower()
-    video_folder = f'media/videos/{instance.pk}'
+    video_folder = os.path.join('media', 'videos', str(instance.pk))
     path = os.path.join(video_folder, clean_title)
+    
+    os.makedirs(video_folder, exist_ok=True)
     
     hls_target = path + f'_{resolution}p.m3u8'
     cmd = (
@@ -32,7 +34,7 @@ def create_master_playlist(instance):
     """
     Create master playlist (master.m3u8) for hls streams.
     """
-    video_folder = f'media/videos/{instance.pk}'
+    video_folder = os.path.join('media', 'videos', str(instance.pk))
     master_playlist_path = os.path.join(video_folder, 'master.m3u8')
     
     os.makedirs(video_folder, exist_ok=True)

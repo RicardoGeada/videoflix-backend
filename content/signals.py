@@ -9,6 +9,7 @@ import shutil
 def video_post_delete(sender, instance, **kwargs):
     if instance.video_file:
         
+        print(instance.video_file.path)
         folder_path = os.path.dirname(instance.video_file.path)
         
         if os.path.isdir(folder_path):
