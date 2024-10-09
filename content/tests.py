@@ -84,7 +84,7 @@ class VideoListAPITests(APITestCase):
         self.video_1.genres.set([self.genre_action])
         self.video_2 = VideoModel.objects.create(title='Video 2', description='Description 2')
         self.video_2.genres.set([self.genre_action])
-        self.video_3 = VideoModel.objects.create(title='Video 3', description='Description 3')
+        self.video_3 = VideoModel.objects.create(title='Video 3', description='Description 3', thumbnail_img=SimpleUploadedFile("test_thumbnail.jpg", b"file_content", content_type="image/jpeg"))
         self.video_3.genres.set([self.genre_comedy])
         self.video_4 = VideoModel.objects.create(title='Video 4', description='Description 4')
         self.video_4.genres.set([self.genre_comedy])
@@ -127,6 +127,11 @@ class VideoListAPITests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 5)
         
+        # check thumbnail_url
+        thumbnail_url = f"{response.wsgi_request.scheme}://{response.wsgi_request.get_host()}/api/videos/{self.video_3.id}/thumbnail/"
+        self.assertEqual(response.data[2]['thumbnail_url'], thumbnail_url)
+        self.assertEqual(response.data[0]['thumbnail_url'], None)
+        
         
         
     def test_get_genre_videos(self):
@@ -164,6 +169,15 @@ class VideoListAPITests(APITestCase):
         self.assertEqual(response.data['results'][1]['title'], 'Video 5')
         
         
+    
+    def tearDown(self):
+      """Clean Up test data after test."""
+      if self.video_3:
+          if os.path.exists(self.video_3.thumbnail_img.path):
+              os.remove(self.video_3.thumbnail_img.path)
+          shutil.rmtree(os.path.dirname(self.video_3.thumbnail_img.path), ignore_errors=True)
+        
+        
 class VideoDetailAPITests(APITestCase):
     
     @mock.patch('content.signals.delete_file')
@@ -176,7 +190,7 @@ class VideoDetailAPITests(APITestCase):
         self.video_1.genres.set([self.genre_action])
         self.video_2 = VideoModel.objects.create(title='Video 2', description='Description 2')
         self.video_2.genres.set([self.genre_action])
-        self.video_3 = VideoModel.objects.create(title='Video 3', description='Description 3', video_file=SimpleUploadedFile("test_video.mp4", b"file_content", content_type="video/mp4"))
+        self.video_3 = VideoModel.objects.create(title='Video 3', description='Description 3', video_file=SimpleUploadedFile("test_video.mp4", b"file_content", content_type="video/mp4"), thumbnail_img=SimpleUploadedFile("test_thumbnail.jpg", b"file_content", content_type="image/jpeg"))
         self.video_3.genres.set([self.genre_comedy])
         self.video_4 = VideoModel.objects.create(title='Video 4', description='Description 4')
         self.video_4.genres.set([self.genre_comedy])
@@ -217,12 +231,15 @@ class VideoDetailAPITests(APITestCase):
         response = self.client.get(url, format='json')
         
         video_url = f"{response.wsgi_request.scheme}://{response.wsgi_request.get_host()}/api/videos/{self.video_3.id}/stream/"
+        thumbnail_url = f"{response.wsgi_request.scheme}://{response.wsgi_request.get_host()}/api/videos/{self.video_3.id}/thumbnail/"
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['title'], self.video_3.title)
         self.assertEqual(response.data['description'], self.video_3.description)
         self.assertEqual(response.data['genres'], [2])
         self.assertEqual(response.data['video_url'], video_url)
+        self.assertEqual(response.data['thumbnail_url'], thumbnail_url)
+        
         
         
     def tearDown(self):
