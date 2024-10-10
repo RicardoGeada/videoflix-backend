@@ -153,6 +153,8 @@ CACHES = {
     }
 }
 
+CACHE_TTL = 60 * 60
+
 # Django Debug Tool
 INTERNAL_IPS = [
     "127.0.0.1",

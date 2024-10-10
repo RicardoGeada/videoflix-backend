@@ -10,9 +10,15 @@ from rest_framework.pagination import LimitOffsetPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.views import APIView
 from django.http import FileResponse, Http404, HttpResponse
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
+from django.conf import settings
 
-
+CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 # Create your views here.
+@method_decorator(cache_page(CACHE_TTL), name='list')
+@method_decorator(cache_page(CACHE_TTL), name='retrieve')
 class GenreModelViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = GenreModel.objects.all()
     serializer_class = GenreModelSerializer
@@ -20,7 +26,7 @@ class GenreModelViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
     
     
-    
+@method_decorator(cache_page(CACHE_TTL), name='get')
 class VideoModelListView(ListAPIView):
     queryset = VideoModel.objects.all()
     serializer_class = VideoModelListSerializer
@@ -42,7 +48,7 @@ class VideoModelListView(ListAPIView):
 
         return queryset
 
-
+@method_decorator(cache_page(CACHE_TTL), name='get')
 class VideoModelDetailView(RetrieveAPIView):
     queryset = VideoModel.objects.all()
     serializer_class = VideoModelDetailSerializer
@@ -50,7 +56,7 @@ class VideoModelDetailView(RetrieveAPIView):
     authentication_classes = [JWTAuthentication]
     
     
-
+@method_decorator(cache_page(CACHE_TTL), name='get')
 class VideoStreamView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
@@ -69,7 +75,7 @@ class VideoStreamView(APIView):
         return response
     
 
-
+@method_decorator(cache_page(CACHE_TTL), name='get')
 class VideoThumbnailView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
