@@ -167,7 +167,7 @@ RQ_QUEUES = {
         "HOST": "localhost",
         "PORT": 6379,
         "DB": 0,
-        "PASSWORD": "foobared",
+        "PASSWORD": os.getenv('REDIS_PASSWORD'),
         "DEFAULT_TIMEOUT": 360,
     },
 }
