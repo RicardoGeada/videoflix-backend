@@ -335,3 +335,29 @@ class PasswordResetTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
+
+class TasksTests(TestCase):
+    
+    def setUp(self):
+        
+        self.user=CustomUser.objects.create(email='test@user.com', password='password', is_active=False)
+    
+    def test_send_activation_email(self):
+        """
+        Ensure activation email gets send.
+        """
+        send_activation_email(self.user)
+        self.assertEqual(len(mail.outbox),1)
+        self.assertIn('Confirm your email', mail.outbox[0].subject)
+        
+        
+    def test_send_password_reset_email(self):
+        """
+        Ensure password reset email gets send.
+        """
+        self.user.is_active = True; 
+        send_password_reset_email(self.user)
+        self.assertEqual(len(mail.outbox),1)
+        self.assertIn('Reset your password', mail.outbox[0].subject)
+
+
