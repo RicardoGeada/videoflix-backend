@@ -126,3 +126,6 @@ GitHub.sublime-settings
 static/
 
 test_assets
+
+# import-export data folder
+/data

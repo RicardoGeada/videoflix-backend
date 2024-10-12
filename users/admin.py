@@ -2,6 +2,8 @@ from django.contrib import admin
 from .models import CustomUser
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth.admin import UserAdmin
+from import_export import resources
+from import_export.admin import ImportExportModelAdmin
 
 # Register your models here.
 @admin.register(CustomUser)
@@ -34,3 +36,9 @@ class CustomUserAdmin(UserAdmin):
             'fields': ('email', 'first_name', 'last_name', 'phone', 'address', 'password1', 'password2'),
         }),
     )
+    
+
+class UsersResource(resources.ModelResource):
+    
+    class Meta:
+        model = CustomUser
