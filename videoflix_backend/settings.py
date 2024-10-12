@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     "django_rq",
     "import_export",
     "users",
+    "content",
+    "django_filters"
 ]
 
 MIDDLEWARE = [
@@ -144,12 +146,14 @@ CACHES = {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://127.0.0.1:6379/1",
         "OPTIONS": {
-            "PASSWORD": "foobared",
+            "PASSWORD": os.getenv('REDIS_PASSWORD'),
             "CLIENT_CLASS": "django_redis.client.DefaultClient"
             },
         "KEY_PREFIX": "videoflix",
     }
 }
+
+CACHE_TTL = 60 * 60
 
 # Django Debug Tool
 INTERNAL_IPS = [
@@ -163,7 +167,7 @@ RQ_QUEUES = {
         "HOST": "localhost",
         "PORT": 6379,
         "DB": 0,
-        "PASSWORD": "foobared",
+        "PASSWORD": os.getenv('REDIS_PASSWORD'),
         "DEFAULT_TIMEOUT": 360,
     },
 }
@@ -192,9 +196,15 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
+
+
+# media folder for videos
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

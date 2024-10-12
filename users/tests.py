@@ -1,4 +1,7 @@
+from unittest.mock import patch
 from django.test import TestCase
+
+from users.tasks import send_activation_email, send_password_reset_email
 from .models import CustomUser
 from django.utils import timezone
 from datetime import timedelta
@@ -58,7 +61,8 @@ class CustomUserModelTest(TestCase):
 
 class RegisterViewTests(APITestCase):
     
-    def test_register_new_user(self):
+    @patch('django_rq.enqueue')  
+    def test_register_new_user(self, mock_enqueue):
         """
         Ensure a new user can be registered and a confirmation email has been send.
         """
@@ -79,9 +83,8 @@ class RegisterViewTests(APITestCase):
         # account is not activated
         self.assertEqual(new_user.is_active, False)
         
-        # check if confirmation email send
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertIn('Confirm your email', mail.outbox[0].subject)
+        # check if django_rq.enqueue was called once with the correct arguments
+        mock_enqueue.assert_called_once_with(send_activation_email, new_user)
         
 
 class ActivationViewTests(APITestCase):
@@ -209,8 +212,8 @@ class PasswordResetTests(APITestCase):
         
     
     # reset_password
-    
-    def test_email_with_password_reset_link_send(self):
+    @patch('django_rq.enqueue')
+    def test_email_with_password_reset_link_send(self, mock_queue):
         """
         Ensure a password reset link gets created.
         """
@@ -221,11 +224,10 @@ class PasswordResetTests(APITestCase):
         response = self.client.post(url, data, format='json')
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertIn('Reset your password', mail.outbox[0].subject)
+        mock_queue.assert_called_once_with(send_password_reset_email, self.activated_user)
         
-    
-    def test_password_reset_with_non_existent_email(self):
+    @patch('django_rq.enqueue')
+    def test_password_reset_with_non_existent_email(self, mock_queue):
         """
         Ensure that no error is raised when a non-existent email is provided.
         """
@@ -237,8 +239,8 @@ class PasswordResetTests(APITestCase):
 
         # no information for the user if the email exists
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # no email sent, because the user doesn't exist
-        self.assertEqual(len(mail.outbox), 0)
+        # no email sent, because the user doesn't exist (no signal called)
+        mock_queue.assert_not_called()
         
     
     # reset_password_confirm
@@ -331,5 +333,31 @@ class PasswordResetTests(APITestCase):
         response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+
+class TasksTests(TestCase):
+    
+    def setUp(self):
+        
+        self.user=CustomUser.objects.create(email='test@user.com', password='password', is_active=False)
+    
+    def test_send_activation_email(self):
+        """
+        Ensure activation email gets send.
+        """
+        send_activation_email(self.user)
+        self.assertEqual(len(mail.outbox),1)
+        self.assertIn('Confirm your email', mail.outbox[0].subject)
+        
+        
+    def test_send_password_reset_email(self):
+        """
+        Ensure password reset email gets send.
+        """
+        self.user.is_active = True; 
+        send_password_reset_email(self.user)
+        self.assertEqual(len(mail.outbox),1)
+        self.assertIn('Reset your password', mail.outbox[0].subject)
 
 

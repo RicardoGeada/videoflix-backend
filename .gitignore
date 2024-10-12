@@ -86,6 +86,7 @@ venv/
 ENV/ 
 env.bak/ 
 venv.bak/ 
+env_lin/
 
 # mkdocs documentation 
 /site 
@@ -123,3 +124,8 @@ GitHub.sublime-settings
 
 /static/
 static/
+
+test_assets
+
+# import-export data folder
+/data
