@@ -30,8 +30,9 @@ SECRET_KEY = "django-insecure-7ee2l4^nm8nwskh4&y*z$bn$!4w8w&pcov2x)+zn^o86jxu7(-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [os.getenv('ENV_LIN_HOST'), 'localhost', '127.0.0.1']
 
+CORS_ALLOWED_ORIGINS = ['http://localhost:4200']
 
 # Application definition
 
@@ -49,10 +50,12 @@ INSTALLED_APPS = [
     "import_export",
     "users",
     "content",
-    "django_filters"
+    "django_filters",
+    "corsheaders"
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -96,6 +99,17 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+# DATABASES = {
+# 	'default': {
+# 		'ENGINE': 'django.db.backends.postgresql',
+# 		'NAME': 'videoflix_backend',
+# 		'USER': os.getenv('POSTRQL_USER'),
+# 		'PASSWORD': os.getenv('POSTRQL_PASSWORD'),
+# 		'HOST': 'localhost',
+# 		'POST': '5432',
+# 	}
+# }
 
 
 # Password validation
@@ -144,7 +158,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "LOCATION": "redis://localhost:6379/1",
         "OPTIONS": {
             "PASSWORD": os.getenv('REDIS_PASSWORD'),
             "CLIENT_CLASS": "django_redis.client.DefaultClient"
@@ -208,3 +222,7 @@ SIMPLE_JWT = {
 # media folder for videos
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+
+# postgres
+CSFR_TRUSTED_ORIGINS = ['']
