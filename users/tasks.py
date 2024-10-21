@@ -1,3 +1,4 @@
+import os
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -42,8 +43,8 @@ def send_password_reset_email(user):
     token = default_token_generator.make_token(user)
 
     # generate reset url
-    reset_url = reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
-    reset_url_full = f"http:/127.0.0.1:8000/{reset_url}"
+    reset_url = os.getenv('FRONTEND_URL')
+    reset_url_full = f"{reset_url}reset-password/?uid={uid}&token={token}"
 
     # load email template
     html_content = render_to_string('password_reset_email.html', {
