@@ -32,6 +32,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [os.getenv('ENV_LIN_HOST'), 'localhost', '127.0.0.1']
 
+CORS_ALLOWED_ORIGINS = ['http://localhost:4200']
 
 # Application definition
 
@@ -49,10 +50,12 @@ INSTALLED_APPS = [
     "import_export",
     "users",
     "content",
-    "django_filters"
+    "django_filters",
+    "corsheaders"
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -90,23 +93,23 @@ AUTH_USER_MODEL = "users.CustomUser"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
-
 DATABASES = {
-	'default': {
-		'ENGINE': 'django.db.backends.postgresql',
-		'NAME': 'videoflix_backend',
-		'USER': os.getenv('POSTRQL_USER'),
-		'PASSWORD': os.getenv('POSTRQL_PASSWORD'),
-		'HOST': 'localhost',
-		'POST': '',
-	}
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
 }
+
+# DATABASES = {
+# 	'default': {
+# 		'ENGINE': 'django.db.backends.postgresql',
+# 		'NAME': 'videoflix_backend',
+# 		'USER': os.getenv('POSTRQL_USER'),
+# 		'PASSWORD': os.getenv('POSTRQL_PASSWORD'),
+# 		'HOST': 'localhost',
+# 		'POST': '5432',
+# 	}
+# }
 
 
 # Password validation
@@ -155,7 +158,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "LOCATION": "redis://localhost:6379/1",
         "OPTIONS": {
             "PASSWORD": os.getenv('REDIS_PASSWORD'),
             "CLIENT_CLASS": "django_redis.client.DefaultClient"

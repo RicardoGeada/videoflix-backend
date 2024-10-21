@@ -5,6 +5,8 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
 
+import content
+
 from .models import GenreModel, VideoModel
 from users.models import CustomUser
 
@@ -180,24 +182,60 @@ class VideoListAPITests(APITestCase):
         
 class VideoDetailAPITests(APITestCase):
     
-    @mock.patch('content.signals.delete_file')
-    @mock.patch('content.signals.convert_to_hls')
-    def setUp(self, mock_convert, mock_delete_file):
+    # @mock.patch('content.signals.delete_file')
+    # @mock.patch('content.signals.convert_to_hls')
+    # def setUp(self, mock_convert, mock_delete_file):
+    #     self.genre_action = GenreModel.objects.create(name='Action')
+    #     self.genre_comedy = GenreModel.objects.create(name='Comedy')
+        
+    #     self.video_1 = VideoModel.objects.create(title='Video 1', description='Description 1')
+    #     self.video_1.genres.set([self.genre_action])
+    #     self.video_2 = VideoModel.objects.create(title='Video 2', description='Description 2')
+    #     self.video_2.genres.set([self.genre_action])
+    #     self.video_3 = VideoModel.objects.create(title='Video 3', description='Description 3', video_file=SimpleUploadedFile("test_video.mp4", b"file_content", content_type="video/mp4"), thumbnail_img=SimpleUploadedFile("test_thumbnail.jpg", b"file_content", content_type="image/jpeg"))
+    #     self.video_3.genres.set([self.genre_comedy])
+    #     self.video_4 = VideoModel.objects.create(title='Video 4', description='Description 4')
+    #     self.video_4.genres.set([self.genre_comedy])
+    #     self.video_5 = VideoModel.objects.create(title='Video 5', description='Description 5')
+    #     self.video_5.genres.set([self.genre_comedy])
+        
+    #     self.user = CustomUser.objects.create_user(email='test@user.com', password='testpassword', is_active=True)
+    
+    
+    def setUp(self):
+        # Verwende patch.object für spezifischere Mocks
+        self.mock_convert = mock.patch.object(content.signals, 'convert_to_hls', autospec=True).start()
+        self.mock_delete_file = mock.patch.object(content.signals, 'delete_file', autospec=True).start()
+        
+        # Sicherstellen, dass die Patches nach dem Test gestoppt werden
+        self.addCleanup(mock.patch.stopall)
+
+        # Erstelle deine Testdaten wie zuvor
         self.genre_action = GenreModel.objects.create(name='Action')
         self.genre_comedy = GenreModel.objects.create(name='Comedy')
-        
+
         self.video_1 = VideoModel.objects.create(title='Video 1', description='Description 1')
         self.video_1.genres.set([self.genre_action])
+
         self.video_2 = VideoModel.objects.create(title='Video 2', description='Description 2')
         self.video_2.genres.set([self.genre_action])
-        self.video_3 = VideoModel.objects.create(title='Video 3', description='Description 3', video_file=SimpleUploadedFile("test_video.mp4", b"file_content", content_type="video/mp4"), thumbnail_img=SimpleUploadedFile("test_thumbnail.jpg", b"file_content", content_type="image/jpeg"))
+
+        self.video_3 = VideoModel.objects.create(
+            title='Video 3', 
+            description='Description 3', 
+            video_file=SimpleUploadedFile("test_video.mp4", b"file_content", content_type="video/mp4"), 
+            thumbnail_img=SimpleUploadedFile("test_thumbnail.jpg", b"file_content", content_type="image/jpeg")
+        )
         self.video_3.genres.set([self.genre_comedy])
+
         self.video_4 = VideoModel.objects.create(title='Video 4', description='Description 4')
         self.video_4.genres.set([self.genre_comedy])
+
         self.video_5 = VideoModel.objects.create(title='Video 5', description='Description 5')
         self.video_5.genres.set([self.genre_comedy])
-        
+
         self.user = CustomUser.objects.create_user(email='test@user.com', password='testpassword', is_active=True)
+
         
         
         
