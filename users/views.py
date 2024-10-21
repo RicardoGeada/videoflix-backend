@@ -3,7 +3,7 @@ from django.shortcuts import render
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import  AllowAny
 
-from .serializers import RegisterSerializer, PasswordResetSerializer, PasswordResetConfirmSerializer
+from .serializers import RegisterSerializer, PasswordResetSerializer, PasswordResetConfirmSerializer, ActivateAccountSerializer
 
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_decode
@@ -31,20 +31,14 @@ class ActivateAccountView(APIView):
     """
     View to activate user account via activation link.
     """
-    def post(self, request, uidb64, token):
-        
-        try:
-            uid = urlsafe_base64_decode(uidb64).decode()
-            user = CustomUser.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
-            user = None
-
-        if user is not None and default_token_generator.check_token(user, token):
-            user.is_active = True
-            user.save()
-            return Response({'message': 'Account activated successfully'}, status=status.HTTP_200_OK)
-        else:
-            return Response({'error': 'Invalid activation link'}, status=status.HTTP_400_BAD_REQUEST)
+    serializer_class = ActivateAccountSerializer
+    
+    def post(self, request, *args, **kwargs):
+       serializer = self.serializer_class(data=request.data)
+       if serializer.is_valid():
+           serializer.save()
+           return Response({"detail": "The account has been successfully activated."}, status=status.HTTP_200_OK)
+       return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
   
  
         

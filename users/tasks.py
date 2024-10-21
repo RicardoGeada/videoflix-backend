@@ -15,8 +15,8 @@ def send_activation_email(instance):
     uid = urlsafe_base64_encode(force_bytes(instance.pk))
 
     # generate activation url
-    activation_url = reverse('activate_account', kwargs={'uidb64': uid, 'token': token})
-    activation_url_full = f"http:/127.0.0.1:8000/{activation_url}"
+    activation_url = os.getenv('FRONTEND_URL')
+    activation_url_full = f"{activation_url}verify-account/?uid={uid}&token={token}"
 
     # load email template
     html_content = render_to_string('confirm_email.html', {
