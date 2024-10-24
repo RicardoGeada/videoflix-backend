@@ -204,6 +204,31 @@ class LoginViewTests(APITestCase):
         self.assertEqual(refresh_response.status_code, status.HTTP_200_OK)
         self.assertIn('access', refresh_response.data)
         self.assertNotEqual(access_token, refresh_response.data['access'])
+        
+        
+    def test_false_refresh_token(self):
+        """
+        Test false refresh token.
+        """
+        # login to get a refresh token
+        url = reverse('login')
+        data = {
+            'email' : self.activated_user.email,
+            'password': 'activated'
+        }
+        response = self.client.post(url, data, format='json')
+        
+        access_token = response.data['access']
+        refresh_token = response.data['refresh']
+        
+        # get a new access_token from the refresh token
+        refresh_url = reverse('token_refresh')
+        refresh_data = {
+            'refresh': 'false_token'
+        }
+        refresh_response = self.client.post(refresh_url, refresh_data, format='json')
+        
+        self.assertEqual(refresh_response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
 
