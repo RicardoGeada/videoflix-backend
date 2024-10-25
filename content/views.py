@@ -74,25 +74,3 @@ class VideoStreamView(APIView):
         
         return response
     
-
-@method_decorator(cache_page(CACHE_TTL), name='get')
-class VideoThumbnailView(APIView):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
-    
-    def get(self, request, pk, format=None):
-        video = get_object_or_404(VideoModel, id=pk)
-        
-        thumbnail_path = video.thumbnail_img.path
-        
-        if not os.path.exists(thumbnail_path):
-            raise Http404("Thumbnail not found")
-        
-        try:
-            with open(thumbnail_path, 'rb') as thumbnail_file:
-                image_data = thumbnail_file.read()
-                response = HttpResponse(image_data, content_type='image/jpeg')
-                response['Cache-Control'] = 'public, max-age=86400'
-                return response
-        except IOError:
-            raise Http404("Thumbnail not accessible")

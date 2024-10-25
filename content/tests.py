@@ -18,9 +18,6 @@ from django.core.files import File
 
 from unittest import mock
 
-from PIL import Image
-import io
-
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 # Create your tests here.
@@ -379,91 +376,5 @@ class VideoStreamAPITests(APITestCase):
                 os.remove(self.video_1.video_file.path)
             shutil.rmtree(os.path.dirname(self.video_1.video_file.path), ignore_errors=True)
             
-            
-class VideoThumbnailAPITests(APITestCase):
-    
-    @mock.patch('content.signals.delete_file')
-    @mock.patch('content.signals.convert_to_hls')
-    def setUp(self, mock_convert, mock_delete_file):
-        
-        self.user = CustomUser.objects.create_user(email='test@user.com', password='testpassword', is_active=True)
-        self.genre_action = GenreModel.objects.create(name='Action')
-        
-        test_thumbnail_img_path = 'media/test_assets/test_thumbnail.jpg'
-        
-        with open(test_thumbnail_img_path, 'rb') as thumbnail_img:
-            self.video_1 = VideoModel.objects.create(
-                title='Video 1',
-                description='Description 1',
-                thumbnail_img=File(thumbnail_img, name='test_thumbnail.jpg')
-            )
-        
-        self.video_1.genres.set([self.genre_action])
-        
-        
-        
-    def authenticate_user(self):
-      """
-      Helper function to authenticate the test user and set the JWT token in the request header.
-      """
-      refresh = RefreshToken.for_user(self.user)
-      self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}') 
-      
-      
-    
-    def test_unauthorized_access(self):
-        """
-        Ensure unauthorized users don't receive access.
-        """
-        url = reverse('video-thumbnail', kwargs={'pk': self.video_1.pk})
-        response = self.client.get(url)
-        
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        
-        
-        
-    def test_get_non_existing_thumbnail(self):
-        """
-        Ensure if the thumbnail doesn't exist error code 404 will be send as response.
-        """
-        self.authenticate_user()
-        
-        url = reverse('video-thumbnail', kwargs={'pk': 999})
-        response = self.client.get(url)
-        
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        
-        
-        
-    def test_get_video_thumbnails(self):
-        """
-        Ensure authorized users can retrieve specific thumbnails by id.
-        """
-        self.authenticate_user()
-        
-        url = reverse('video-thumbnail', kwargs={'pk': self.video_1.id})
-        response = self.client.get(url)
-        
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response['Content-Type'], 'image/jpeg')
-        
-        image_data = response.content
-        response_bytes = io.BytesIO(image_data) # create BytesIO-object
-        response_image = Image.open(response_bytes) # open image with PIL
-        
-        with open(self.video_1.thumbnail_img.path, 'rb') as f:
-            expected_image_data = f.read()  # read image data
-            expected_image_bytes = io.BytesIO(expected_image_data)  # create BytesIO-object
-            expected_image = Image.open(expected_image_bytes) # open image with PIL
-        
-        # compare response image and thumbnail image
-        self.assertEqual(list(response_image.getdata()), list(expected_image.getdata()))
 
-        
-    def tearDown(self):
-        """Clean Up test data after test."""
-        if self.video_1:
-            if os.path.exists(self.video_1.thumbnail_img.path):
-                os.remove(self.video_1.thumbnail_img.path)
-            shutil.rmtree(os.path.dirname(self.video_1.thumbnail_img.path), ignore_errors=True)
         
