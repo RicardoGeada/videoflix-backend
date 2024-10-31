@@ -56,10 +56,11 @@ class VideoModelDetailView(RetrieveAPIView):
     authentication_classes = [JWTAuthentication]
     
     
+# TODO: Add token-based authentication to media URLs for secure access
 @method_decorator(cache_page(CACHE_TTL), name='get')
 class VideoStreamView(APIView):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = [JWTAuthentication]
     
     def get(self, request, pk, format=None):
         video = get_object_or_404(VideoModel, id=pk)
@@ -74,3 +75,23 @@ class VideoStreamView(APIView):
         
         return response
     
+
+class VideoSegmentView(APIView):
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = [JWTAuthentication]
+
+    def get(self, request, pk, filename, format=None):
+        video = get_object_or_404(VideoModel, id=pk)
+        segment_path = f'media/videos/{video.id}/{filename}'
+
+        if filename.endswith(".m3u8"):
+            content_type = 'application/vnd.apple.mpegurl'
+        elif filename.endswith(".ts"):
+            content_type = 'video/MP2T'
+        else:
+            raise Http404("Unsupported file type")
+
+        response = FileResponse(open(segment_path, 'rb'), content_type=content_type)
+        response['Cache-Control'] = 'private, no-cache, no-store, must-revalidate'
+        
+        return response
