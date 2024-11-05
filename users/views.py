@@ -15,6 +15,9 @@ from .models import CustomUser
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 
+import django_rq
+from .tasks import send_activation_email
+
 # Create your views here.
 class RegisterView(CreateAPIView):
     """
@@ -52,14 +55,22 @@ class LoginView(APIView):
         user = authenticate(request, email=email, password=password)
         
         if user is not None:
-            # generate token
-            refresh = RefreshToken.for_user(user)
-            return Response({
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
-            })
+                # generate token
+                refresh = RefreshToken.for_user(user)
+                return Response({
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                })
         else:
-             return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+            # resend activation link if not user.is_active
+            try: 
+                user = CustomUser.objects.get(email=email)
+                if user and not user.is_active:
+                    django_rq.enqueue(send_activation_email, user)
+            except:
+                pass
+      
+            return Response({"detail": "Account could not be verified. Please check your credentials or activate your account if necessary."}, status=status.HTTP_401_UNAUTHORIZED)
          
 
 class PasswordResetView(APIView):
