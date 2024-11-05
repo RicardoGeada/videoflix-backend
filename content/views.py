@@ -1,4 +1,5 @@
 import os
+import random
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from .models import GenreModel, VideoModel
@@ -14,6 +15,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.conf import settings
+from rest_framework.response import Response
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 # Create your views here.
@@ -95,3 +97,19 @@ class VideoSegmentView(APIView):
         response['Cache-Control'] = 'private, no-cache, no-store, must-revalidate'
         
         return response
+    
+    
+
+class BillboardVideoView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    
+    def get(self, request, *args, **kwargs):
+        # get the 10 newest videos
+        pks = VideoModel.objects.order_by('-created_at').values_list('pk', flat=True)[:10]
+        # choose one random
+        random_pk = random.choice(pks)
+        random_video = VideoModel.objects.get(pk=random_pk)
+        
+        serializer = VideoModelDetailSerializer(random_video, context={'request': request})
+        return Response(serializer.data)
