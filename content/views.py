@@ -10,7 +10,7 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.pagination import LimitOffsetPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.views import APIView
-from django.http import FileResponse, Http404, HttpResponse
+from django.http import FileResponse, Http404
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
@@ -67,7 +67,7 @@ class VideoStreamView(APIView):
     def get(self, request, pk, format=None):
         video = get_object_or_404(VideoModel, id=pk)
         
-        master_playlist_path = f'media/videos/{video.id}/master.m3u8'
+        master_playlist_path = os.path.join(settings.MEDIA_ROOT, 'videos', str(video.id), 'master.m3u8')
         
         if not os.path.exists(master_playlist_path):
             raise Http404("Video stream not found")
@@ -84,7 +84,7 @@ class VideoSegmentView(APIView):
 
     def get(self, request, pk, filename, format=None):
         video = get_object_or_404(VideoModel, id=pk)
-        segment_path = f'media/videos/{video.id}/{filename}'
+        segment_path = os.path.join(settings.MEDIA_ROOT, 'videos', str(video.id), filename)
 
         if filename.endswith(".m3u8"):
             content_type = 'application/vnd.apple.mpegurl'

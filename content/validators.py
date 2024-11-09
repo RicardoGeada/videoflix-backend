@@ -8,7 +8,6 @@ def validate_jpeg_file(value):
         raise ValidationError('The image must be in JPEG format.')
     
     
-    
 @deconstructible
 class ValidateFileSize:
     def __init__(self, max_size_mb):
