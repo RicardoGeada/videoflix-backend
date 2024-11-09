@@ -7,7 +7,7 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
 
-from content.tasks import convert_to_hls, create_master_playlist
+from content.tasks import create_master_playlist
 
 from .models import GenreModel, VideoModel
 from users.models import CustomUser
@@ -23,11 +23,8 @@ from unittest import mock
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 
-TEST_MEDIA_ROOT = os.path.join(settings.BASE_DIR, "media_test")
-
-
 # Create your tests here.
-@override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
+@override_settings(MEDIA_ROOT=TemporaryDirectory().name)
 class GenreAPITests(APITestCase):
 
     def setUp(self):
@@ -81,7 +78,7 @@ class GenreAPITests(APITestCase):
         self.assertEqual(response.data["name"], self.genre_action.name)
 
 
-@override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
+@override_settings(MEDIA_ROOT=TemporaryDirectory().name)
 class VideoListAPITests(APITestCase):
 
     @mock.patch("django_rq.get_queue")
@@ -183,19 +180,8 @@ class VideoListAPITests(APITestCase):
         self.assertEqual(response.data["results"][0]["title"], "Video 4")
         self.assertEqual(response.data["results"][1]["title"], "Video 5")
 
-    def tearDown(self):
-        """Clean Up test data after test."""
-        if os.path.exists(TEST_MEDIA_ROOT):
-            for root, dirs, files in os.walk(TEST_MEDIA_ROOT, topdown=False):
-                for name in files:
-                    file_path = os.path.join(root, name)
-                    os.remove(file_path)
-                for name in dirs:
-                    dir_path = os.path.join(root, name)
-                    os.rmdir(dir_path)
 
-
-@override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
+@override_settings(MEDIA_ROOT=TemporaryDirectory().name)
 class VideoDetailAPITests(APITestCase):
 
     @mock.patch("django_rq.get_queue")
@@ -275,19 +261,9 @@ class VideoDetailAPITests(APITestCase):
         self.assertEqual(response.data["video_url"], video_url)
         self.assertEqual(response.data["thumbnail_url"], thumbnail_url)
 
-    def tearDown(self):
-        """Clean Up test data after test."""
-        if os.path.exists(TEST_MEDIA_ROOT):
-            for root, dirs, files in os.walk(TEST_MEDIA_ROOT, topdown=False):
-                for name in files:
-                    file_path = os.path.join(root, name)
-                    os.remove(file_path)
-                for name in dirs:
-                    dir_path = os.path.join(root, name)
-                    os.rmdir(dir_path)
 
 
-@override_settings(MEDIA_ROOT=TEST_MEDIA_ROOT)
+@override_settings(MEDIA_ROOT=TemporaryDirectory().name)
 class VideoStreamAPITests(APITestCase):
 
     @mock.patch("django_rq.get_queue")
@@ -369,16 +345,6 @@ class VideoStreamAPITests(APITestCase):
         actual_playlist_content = streaming_content.splitlines()
         self.assertEqual(expected_playlist_content, actual_playlist_content)
 
-    def tearDown(self):
-        """Clean Up test data after test."""
-        if os.path.exists(TEST_MEDIA_ROOT):
-            for root, dirs, files in os.walk(TEST_MEDIA_ROOT, topdown=False):
-                for name in files:
-                    file_path = os.path.join(root, name)
-                    os.remove(file_path)
-                for name in dirs:
-                    dir_path = os.path.join(root, name)
-                    os.rmdir(dir_path)
 
 
 @override_settings(MEDIA_ROOT=TemporaryDirectory().name)
