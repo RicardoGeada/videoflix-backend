@@ -370,21 +370,21 @@ class VideoSegmentAPITests(APITestCase):
             )
         self.video_1.genres.set([self.genre_action])
 
-        self.create_mock_files(self.video_1, resolution="480")
+        self._create_mock_files(self.video_1, resolution="480")
          
     
-    def create_mock_files(self, video_instance, resolution="480"):
+    def _create_mock_files(self, video_instance, resolution="480"):
         """
         Create a mock m3u8 file and a mock .ts file for the video.
         """
         video_folder = os.path.join(settings.MEDIA_ROOT, 'videos', str(video_instance.pk))
         os.makedirs(video_folder, exist_ok=True)
 
-        self.create_mock_m3u8_file(video_folder, video_instance.title, resolution)
-        self.create_mock_ts_file(video_folder, video_instance.title, resolution)
+        self._create_mock_m3u8_file(video_folder, video_instance.title, resolution)
+        self._create_mock_ts_file(video_folder, video_instance.title, resolution)
         
     
-    def create_mock_m3u8_file(self, folder, title, resolution):
+    def _create_mock_m3u8_file(self, folder, title, resolution):
         """
         Create a mock m3u8 file.
         """
@@ -412,7 +412,7 @@ class VideoSegmentAPITests(APITestCase):
             f.write(m3u8_content)
             
 
-    def create_mock_ts_file(self, folder, title, resolution):
+    def _create_mock_ts_file(self, folder, title, resolution):
         """
         Create a mock .ts file.
         """
@@ -465,3 +465,57 @@ class VideoSegmentAPITests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response["Content-Type"], "video/MP2T")
 
+
+
+
+class BillboardVideoAPITests(APITestCase):
+    
+    def setUp(self): 
+        self._create_genres()
+        self._create_videos(count=15)
+        self._create_user()
+    
+    def _create_genres(self):
+        """ Create genre models """
+        self.genre_action = GenreModel.objects.create(name="Action")
+        self.genre_comedy = GenreModel.objects.create(name="Comedy")
+        
+    def _create_videos(self, count):
+        """ Create video models """
+        for i in range(count):
+            videoname = f"video_{i+1}"
+            video = VideoModel.objects.create(title=f"Video {i+1}", description=f"Description {i+1}")
+            video.genres.set([self.genre_comedy])
+            setattr(self, videoname, video)
+            
+    def _create_user(self):
+        """ Create user model """
+        self.user = CustomUser.objects.create_user(
+            email="test@user.com", password="testpassword", is_active=True
+        )    
+            
+    def _authenticate_user(self):
+        """
+        Helper function to authenticate the test user and set the JWT token in the request header.
+        """
+        refresh = RefreshToken.for_user(self.user)
+        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {refresh.access_token}")
+            
+            
+    def test_get_random_billboard_video(self):
+        """
+        Ensure the user gets a random video data from the newest 10 videos.
+        """
+        self._authenticate_user()
+        
+        url = reverse("video-billboard")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        self.assertIn("title", response.data)
+        self.assertIn("description", response.data)
+        
+        # check if video is one of the 10 newest videos
+        latest_videos_pks = VideoModel.objects.order_by('-created_at').values_list('pk', flat=True)[:10]
+        self.assertIn(response.data['id'], latest_videos_pks)
+    
