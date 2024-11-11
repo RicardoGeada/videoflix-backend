@@ -1,5 +1,6 @@
 import subprocess
 import os
+from django.conf import settings
 
 def convert_to_hls(instance, resolution):
     """
@@ -13,7 +14,7 @@ def convert_to_hls(instance, resolution):
     
     # set target path with new filename
     clean_title = instance.title.replace(' ', '_').lower()
-    video_folder = os.path.join('media', 'videos', str(instance.pk))
+    video_folder = os.path.join(settings.MEDIA_ROOT, 'videos', str(instance.pk))
     path = os.path.join(video_folder, clean_title)
     os.makedirs(video_folder, exist_ok=True)
     target = path + f'_{resolution}p.m3u8'
@@ -39,7 +40,7 @@ def create_master_playlist(instance):
     """
     Create master playlist (master.m3u8) for hls streams.
     """
-    video_folder = os.path.join('media', 'videos', str(instance.pk))
+    video_folder = os.path.join(settings.MEDIA_ROOT, 'videos', str(instance.pk))
     master_playlist_path = os.path.join(video_folder, 'master.m3u8')
     
     os.makedirs(video_folder, exist_ok=True)

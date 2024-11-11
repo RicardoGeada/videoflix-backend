@@ -68,3 +68,28 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         user = CustomUser.objects.get(pk=uid)
         user.set_password(self.validated_data['new_password'])
         user.save()
+        
+        
+
+class ActivateAccountSerializer(serializers.Serializer):
+    
+    uidb64 = serializers.CharField()
+    token = serializers.CharField()
+    
+    def validate(self, attrs):
+        try:
+            uid = urlsafe_base64_decode(attrs['uidb64']).decode()
+            user = CustomUser.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
+            raise serializers.ValidationError("Invalid user.")
+        
+        if not default_token_generator.check_token(user, attrs['token']):
+            raise serializers.ValidationError("Invalid token.")
+        
+        return attrs
+
+    def save(self):
+        uid = urlsafe_base64_decode(self.validated_data['uidb64']).decode()
+        user = CustomUser.objects.get(pk=uid)
+        user.is_active = True
+        user.save()

@@ -103,9 +103,13 @@ class ActivationViewTests(APITestCase):
         # generate uidb64 and token for activation link
         uidb64 = urlsafe_base64_encode(force_bytes(new_user.pk))
         token = default_token_generator.make_token(new_user)       
-        activation_url = reverse('activate_account', kwargs={'uidb64': uidb64, 'token': token})
+        activation_url = reverse('activate_account')
+        data = {
+            'uidb64': uidb64,
+            'token': token,
+        }
         
-        response = self.client.post(activation_url)
+        response = self.client.post(activation_url, data, format='json')
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         new_user.refresh_from_db()
@@ -200,6 +204,31 @@ class LoginViewTests(APITestCase):
         self.assertEqual(refresh_response.status_code, status.HTTP_200_OK)
         self.assertIn('access', refresh_response.data)
         self.assertNotEqual(access_token, refresh_response.data['access'])
+        
+        
+    def test_false_refresh_token(self):
+        """
+        Test false refresh token.
+        """
+        # login to get a refresh token
+        url = reverse('login')
+        data = {
+            'email' : self.activated_user.email,
+            'password': 'activated'
+        }
+        response = self.client.post(url, data, format='json')
+        
+        access_token = response.data['access']
+        refresh_token = response.data['refresh']
+        
+        # get a new access_token from the refresh token
+        refresh_url = reverse('token_refresh')
+        refresh_data = {
+            'refresh': 'false_token'
+        }
+        refresh_response = self.client.post(refresh_url, refresh_data, format='json')
+        
+        self.assertEqual(refresh_response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
 
@@ -252,7 +281,7 @@ class PasswordResetTests(APITestCase):
         uidb64 = urlsafe_base64_encode(force_bytes(self.activated_user.pk))
         token = default_token_generator.make_token(self.activated_user) 
         
-        url = reverse('password_reset_confirm', kwargs={'uidb64': uidb64, 'token': token})
+        url = reverse('password_reset_confirm')
         data = {
             'new_password': 'newpassword',
             'uidb64': uidb64, 
@@ -271,7 +300,7 @@ class PasswordResetTests(APITestCase):
         """
         uidb64 = urlsafe_base64_encode(force_bytes(self.activated_user.pk))
         invalid_token = 'invalid-token'
-        url = reverse('password_reset_confirm', kwargs={'uidb64': uidb64, 'token': invalid_token})
+        url = reverse('password_reset_confirm')
         data = {
             'new_password': 'newpassword',
             'uidb64': uidb64,
@@ -288,7 +317,7 @@ class PasswordResetTests(APITestCase):
         """
         invalid_uidb64 = 'invalid-uid'  # Setze eine ungültige UID
         token = default_token_generator.make_token(self.activated_user)
-        url = reverse('password_reset_confirm', kwargs={'uidb64': invalid_uidb64, 'token': token})
+        url = reverse('password_reset_confirm')
         data = {
             'new_password': 'newpassword',
             'uidb64': invalid_uidb64,
@@ -306,7 +335,7 @@ class PasswordResetTests(APITestCase):
         uidb64 = urlsafe_base64_encode(force_bytes(self.activated_user.pk))
         token = default_token_generator.make_token(self.activated_user)
 
-        url = reverse('password_reset_confirm', kwargs={'uidb64': uidb64, 'token': token})
+        url = reverse('password_reset_confirm')
         data = {
             # 'new_password' 
             'uidb64': uidb64,
@@ -324,7 +353,7 @@ class PasswordResetTests(APITestCase):
         uidb64 = urlsafe_base64_encode(force_bytes(self.unactivated_user.pk))
         token = default_token_generator.make_token(self.unactivated_user)
 
-        url = reverse('password_reset_confirm', kwargs={'uidb64': uidb64, 'token': token})
+        url = reverse('password_reset_confirm')
         data = {
             'new_password': 'newpassword',
             'uidb64': uidb64,

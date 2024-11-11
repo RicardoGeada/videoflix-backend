@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework import serializers
 from .models import GenreModel, VideoModel
 
@@ -16,11 +17,11 @@ class VideoModelListSerializer(serializers.ModelSerializer):
         
     def get_thumbnail_url(self, obj):
         """
-        Provides url for video thumbnail api endpoint.
+        Provides url for video thumbnail.
         """
         request = self.context.get('request')
         if obj.thumbnail_img:
-            thumbnail_url = f"{request.scheme}://{request.get_host()}/api/videos/{obj.id}/thumbnail/"
+            thumbnail_url = f"{request.scheme}://{request.get_host()}{settings.MEDIA_URL}videos/{obj.id}/thumbnail.jpg"
             return thumbnail_url
         return None
 
@@ -44,10 +45,10 @@ class VideoModelDetailSerializer(serializers.ModelSerializer):
     
     def get_thumbnail_url(self, obj):
         """
-        Provides url for video thumbnail api endpoint.
+        Provides url for video thumbnail.
         """
         request = self.context.get('request')
         if obj.thumbnail_img:
-            thumbnail_url = f"{request.scheme}://{request.get_host()}/api/videos/{obj.id}/thumbnail/"
+            thumbnail_url = f"{request.scheme}://{request.get_host()}{settings.MEDIA_URL}videos/{obj.id}/thumbnail.jpg"
             return thumbnail_url
         return None
