@@ -30,7 +30,7 @@ SECRET_KEY = "django-insecure-7ee2l4^nm8nwskh4&y*z$bn$!4w8w&pcov2x)+zn^o86jxu7(-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [os.getenv('ENV_LIN_HOST'), 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [os.getenv('ENV_LIN_HOST'), 'localhost', '127.0.0.1', os.getenv('HOST_URL')]
 
 CORS_ALLOWED_ORIGINS = ['http://localhost:4200']
 
@@ -146,7 +146,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 
 
 # Default primary key field type
@@ -189,7 +189,7 @@ RQ_QUEUES = {
 
 # import-export
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 IMPORT_EXPORT_USE_TRANSACTIONS = True
 
