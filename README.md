@@ -49,4 +49,28 @@ To run this backend locally, make sure you have the following tools installed:
    ALTER ROLE videoflix_user SET timezone TO 'UTC';
    GRANT ALL PRIVILEGES ON DATABASE videoflix TO videoflix_user;
 
+5. **Set up th environment variables:**
+   Create a .env file in the root of the project and add the following environment variables:
+   ```ini
+   # Email settings for sending emails (e.g., for user registration, password reset, etc.)
+   EMAIL_HOST=smtp.email-provider.com          # SMTP server address (e.g., Gmail, SendGrid)
+   EMAIL_PORT=587                             # SMTP server port (587 is typically for TLS)
+   EMAIL_HOST_USER=youremail@yourdomain.com   # Your email account for sending emails
+   EMAIL_HOST_PASSWORD=yourpassword           # The password for the above email account
+   DEFAULT_FROM_EMAIL=youremail@yourdomain.com # Default email address used in 'From' field
+
+   # Redis settings for background task queue (RQWorker)
+   REDIS_PASSWORD=password                    # Password for the Redis instance (if applicable)
+
+   # PostgreSQL settings for connecting to the database
+   POSTRQL_USER=user                          # PostgreSQL database user
+   POSTRQL_PASSWORD=password                  # Password for the PostgreSQL user
+
+   # If you're using a different environment for RQWorker on Windows (VENV), specify here
+   ENV_LIN_HOST=your.server.ip                # This is the IP address or hostname for your server
+
+   # Frontend URL, used for building API endpoints or sending email links (e.g., password reset)
+   FRONTEND_URL=http://localhost:4200/         # URL of your frontend (in this case, local development server)
+
+
 
