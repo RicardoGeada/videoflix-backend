@@ -28,7 +28,7 @@ To run this backend locally, make sure you have the following tools installed:
    git clone https://github.com/your-username/videoflix-backend.git
    cd videoflix-backend
 
-2. **Create and activate a virtual environment**
+2. **Create and activate a virtual environment:**
    If you don't have virtualenv installed, you can install it with pip install virtualenv.
    ```bash
    python -m venv venv
@@ -71,6 +71,42 @@ To run this backend locally, make sure you have the following tools installed:
 
    # Frontend URL, used for building API endpoints or sending email links (e.g., password reset)
    FRONTEND_URL=http://localhost:4200/         # URL of your frontend (in this case, local development server)
+
+6. **Install FFmpeg:**
+   Install FFmpeg for video processing (for example, for encoding videos). Follow the installation guide for your operating system.
+
+7. **Migrate the database:**
+   Run the migrations to set up the database schema:
+   ```bash
+   python manage.py makemigrations
+   python manage.py migrate
+
+8. **Create a Superuser:**
+   To create an admin superuser, run the following command:
+   ```bash
+   python manage.py createsuperuser
+
+   Follow the prompts to create the superuser.
+
+9. **Start the Redis server**
+   If Redis is not running, start it by running:
+    ```bash
+    redis-server
+
+10. **Start the RQ Worker:**
+    RQWorker is used for background tasks (like video encoding). In one terminal, start the worker:
+    ```bash
+    python manage.py rqworker
+
+11. **Run the Django Development Server**
+    Finally, start the Django server to run the API:
+    ````bash
+    python manage.py runserver
+
+   The server should now be running at http://127.0.0.1:8000.
+
+
+
 
 
 
