@@ -124,8 +124,12 @@ GitHub.sublime-settings
 
 /static/
 static/
+staticfiles/
 
 test_assets
 
 # import-export data folder
 /data
+
+# script folder
+/scripts
