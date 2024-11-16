@@ -1,0 +1,1068 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>users package &mdash; videoflix_backend 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            videoflix_backend
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">users package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-users.admin">users.admin module</a><ul>
+<li><a class="reference internal" href="#users.admin.CustomUserAdmin"><code class="docutils literal notranslate"><span class="pre">CustomUserAdmin</span></code></a><ul>
+<li><a class="reference internal" href="#users.admin.CustomUserAdmin.add_fieldsets"><code class="docutils literal notranslate"><span class="pre">CustomUserAdmin.add_fieldsets</span></code></a></li>
+<li><a class="reference internal" href="#users.admin.CustomUserAdmin.add_form"><code class="docutils literal notranslate"><span class="pre">CustomUserAdmin.add_form</span></code></a></li>
+<li><a class="reference internal" href="#users.admin.CustomUserAdmin.fieldsets"><code class="docutils literal notranslate"><span class="pre">CustomUserAdmin.fieldsets</span></code></a></li>
+<li><a class="reference internal" href="#users.admin.CustomUserAdmin.form"><code class="docutils literal notranslate"><span class="pre">CustomUserAdmin.form</span></code></a></li>
+<li><a class="reference internal" href="#users.admin.CustomUserAdmin.list_display"><code class="docutils literal notranslate"><span class="pre">CustomUserAdmin.list_display</span></code></a></li>
+<li><a class="reference internal" href="#users.admin.CustomUserAdmin.media"><code class="docutils literal notranslate"><span class="pre">CustomUserAdmin.media</span></code></a></li>
+<li><a class="reference internal" href="#users.admin.CustomUserAdmin.ordering"><code class="docutils literal notranslate"><span class="pre">CustomUserAdmin.ordering</span></code></a></li>
+<li><a class="reference internal" href="#users.admin.CustomUserAdmin.readonly_fields"><code class="docutils literal notranslate"><span class="pre">CustomUserAdmin.readonly_fields</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#users.admin.UsersResource"><code class="docutils literal notranslate"><span class="pre">UsersResource</span></code></a><ul>
+<li><a class="reference internal" href="#users.admin.UsersResource.Meta"><code class="docutils literal notranslate"><span class="pre">UsersResource.Meta</span></code></a><ul>
+<li><a class="reference internal" href="#users.admin.UsersResource.Meta.model"><code class="docutils literal notranslate"><span class="pre">UsersResource.Meta.model</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#users.admin.UsersResource.fields"><code class="docutils literal notranslate"><span class="pre">UsersResource.fields</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-users.apps">users.apps module</a><ul>
+<li><a class="reference internal" href="#users.apps.UsersConfig"><code class="docutils literal notranslate"><span class="pre">UsersConfig</span></code></a><ul>
+<li><a class="reference internal" href="#users.apps.UsersConfig.default_auto_field"><code class="docutils literal notranslate"><span class="pre">UsersConfig.default_auto_field</span></code></a></li>
+<li><a class="reference internal" href="#users.apps.UsersConfig.name"><code class="docutils literal notranslate"><span class="pre">UsersConfig.name</span></code></a></li>
+<li><a class="reference internal" href="#users.apps.UsersConfig.ready"><code class="docutils literal notranslate"><span class="pre">UsersConfig.ready()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-users.forms">users.forms module</a><ul>
+<li><a class="reference internal" href="#users.forms.CustomUserChangeForm"><code class="docutils literal notranslate"><span class="pre">CustomUserChangeForm</span></code></a><ul>
+<li><a class="reference internal" href="#users.forms.CustomUserChangeForm.Meta"><code class="docutils literal notranslate"><span class="pre">CustomUserChangeForm.Meta</span></code></a><ul>
+<li><a class="reference internal" href="#users.forms.CustomUserChangeForm.Meta.fields"><code class="docutils literal notranslate"><span class="pre">CustomUserChangeForm.Meta.fields</span></code></a></li>
+<li><a class="reference internal" href="#users.forms.CustomUserChangeForm.Meta.model"><code class="docutils literal notranslate"><span class="pre">CustomUserChangeForm.Meta.model</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#users.forms.CustomUserChangeForm.base_fields"><code class="docutils literal notranslate"><span class="pre">CustomUserChangeForm.base_fields</span></code></a></li>
+<li><a class="reference internal" href="#users.forms.CustomUserChangeForm.declared_fields"><code class="docutils literal notranslate"><span class="pre">CustomUserChangeForm.declared_fields</span></code></a></li>
+<li><a class="reference internal" href="#users.forms.CustomUserChangeForm.media"><code class="docutils literal notranslate"><span class="pre">CustomUserChangeForm.media</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#users.forms.CustomUserCreationForm"><code class="docutils literal notranslate"><span class="pre">CustomUserCreationForm</span></code></a><ul>
+<li><a class="reference internal" href="#users.forms.CustomUserCreationForm.Meta"><code class="docutils literal notranslate"><span class="pre">CustomUserCreationForm.Meta</span></code></a><ul>
+<li><a class="reference internal" href="#users.forms.CustomUserCreationForm.Meta.fields"><code class="docutils literal notranslate"><span class="pre">CustomUserCreationForm.Meta.fields</span></code></a></li>
+<li><a class="reference internal" href="#users.forms.CustomUserCreationForm.Meta.model"><code class="docutils literal notranslate"><span class="pre">CustomUserCreationForm.Meta.model</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#users.forms.CustomUserCreationForm.base_fields"><code class="docutils literal notranslate"><span class="pre">CustomUserCreationForm.base_fields</span></code></a></li>
+<li><a class="reference internal" href="#users.forms.CustomUserCreationForm.declared_fields"><code class="docutils literal notranslate"><span class="pre">CustomUserCreationForm.declared_fields</span></code></a></li>
+<li><a class="reference internal" href="#users.forms.CustomUserCreationForm.media"><code class="docutils literal notranslate"><span class="pre">CustomUserCreationForm.media</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-users.models">users.models module</a><ul>
+<li><a class="reference internal" href="#users.models.CustomUser"><code class="docutils literal notranslate"><span class="pre">CustomUser</span></code></a><ul>
+<li><a class="reference internal" href="#users.models.CustomUser.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">CustomUser.DoesNotExist</span></code></a></li>
+<li><a class="reference internal" href="#users.models.CustomUser.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">CustomUser.MultipleObjectsReturned</span></code></a></li>
+<li><a class="reference internal" href="#users.models.CustomUser.REQUIRED_FIELDS"><code class="docutils literal notranslate"><span class="pre">CustomUser.REQUIRED_FIELDS</span></code></a></li>
+<li><a class="reference internal" href="#users.models.CustomUser.USERNAME_FIELD"><code class="docutils literal notranslate"><span class="pre">CustomUser.USERNAME_FIELD</span></code></a></li>
+<li><a class="reference internal" href="#users.models.CustomUser.address"><code class="docutils literal notranslate"><span class="pre">CustomUser.address</span></code></a></li>
+<li><a class="reference internal" href="#users.models.CustomUser.date_joined"><code class="docutils literal notranslate"><span class="pre">CustomUser.date_joined</span></code></a></li>
+<li><a class="reference internal" href="#users.models.CustomUser.email"><code class="docutils literal notranslate"><span class="pre">CustomUser.email</span></code></a></li>
+<li><a class="reference internal" href="#users.models.CustomUser.first_name"><code class="docutils literal notranslate"><span class="pre">CustomUser.first_name</span></code></a></li>
+<li><a class="reference internal" href="#users.models.CustomUser.get_next_by_date_joined"><code class="docutils literal notranslate"><span class="pre">CustomUser.get_next_by_date_joined()</span></code></a></li>
+<li><a class="reference internal" href="#users.models.CustomUser.get_previous_by_date_joined"><code class="docutils literal notranslate"><span class="pre">CustomUser.get_previous_by_date_joined()</span></code></a></li>
+<li><a class="reference internal" href="#users.models.CustomUser.groups"><code class="docutils literal notranslate"><span class="pre">CustomUser.groups</span></code></a></li>
+<li><a class="reference internal" href="#users.models.CustomUser.id"><code class="docutils literal notranslate"><span class="pre">CustomUser.id</span></code></a></li>
+<li><a class="reference internal" href="#users.models.CustomUser.is_active"><code class="docutils literal notranslate"><span class="pre">CustomUser.is_active</span></code></a></li>
+<li><a class="reference internal" href="#users.models.CustomUser.is_staff"><code class="docutils literal notranslate"><span class="pre">CustomUser.is_staff</span></code></a></li>
+<li><a class="reference internal" href="#users.models.CustomUser.is_superuser"><code class="docutils literal notranslate"><span class="pre">CustomUser.is_superuser</span></code></a></li>
+<li><a class="reference internal" href="#users.models.CustomUser.last_login"><code class="docutils literal notranslate"><span class="pre">CustomUser.last_login</span></code></a></li>
+<li><a class="reference internal" href="#users.models.CustomUser.last_name"><code class="docutils literal notranslate"><span class="pre">CustomUser.last_name</span></code></a></li>
+<li><a class="reference internal" href="#users.models.CustomUser.logentry_set"><code class="docutils literal notranslate"><span class="pre">CustomUser.logentry_set</span></code></a></li>
+<li><a class="reference internal" href="#users.models.CustomUser.objects"><code class="docutils literal notranslate"><span class="pre">CustomUser.objects</span></code></a></li>
+<li><a class="reference internal" href="#users.models.CustomUser.password"><code class="docutils literal notranslate"><span class="pre">CustomUser.password</span></code></a></li>
+<li><a class="reference internal" href="#users.models.CustomUser.phone"><code class="docutils literal notranslate"><span class="pre">CustomUser.phone</span></code></a></li>
+<li><a class="reference internal" href="#users.models.CustomUser.user_permissions"><code class="docutils literal notranslate"><span class="pre">CustomUser.user_permissions</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#users.models.CustomUserManager"><code class="docutils literal notranslate"><span class="pre">CustomUserManager</span></code></a><ul>
+<li><a class="reference internal" href="#users.models.CustomUserManager.create_superuser"><code class="docutils literal notranslate"><span class="pre">CustomUserManager.create_superuser()</span></code></a></li>
+<li><a class="reference internal" href="#users.models.CustomUserManager.create_user"><code class="docutils literal notranslate"><span class="pre">CustomUserManager.create_user()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-users.serializers">users.serializers module</a><ul>
+<li><a class="reference internal" href="#users.serializers.ActivateAccountSerializer"><code class="docutils literal notranslate"><span class="pre">ActivateAccountSerializer</span></code></a><ul>
+<li><a class="reference internal" href="#users.serializers.ActivateAccountSerializer.save"><code class="docutils literal notranslate"><span class="pre">ActivateAccountSerializer.save()</span></code></a></li>
+<li><a class="reference internal" href="#users.serializers.ActivateAccountSerializer.validate"><code class="docutils literal notranslate"><span class="pre">ActivateAccountSerializer.validate()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#users.serializers.PasswordResetConfirmSerializer"><code class="docutils literal notranslate"><span class="pre">PasswordResetConfirmSerializer</span></code></a><ul>
+<li><a class="reference internal" href="#users.serializers.PasswordResetConfirmSerializer.save"><code class="docutils literal notranslate"><span class="pre">PasswordResetConfirmSerializer.save()</span></code></a></li>
+<li><a class="reference internal" href="#users.serializers.PasswordResetConfirmSerializer.validate"><code class="docutils literal notranslate"><span class="pre">PasswordResetConfirmSerializer.validate()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#users.serializers.PasswordResetSerializer"><code class="docutils literal notranslate"><span class="pre">PasswordResetSerializer</span></code></a><ul>
+<li><a class="reference internal" href="#users.serializers.PasswordResetSerializer.save"><code class="docutils literal notranslate"><span class="pre">PasswordResetSerializer.save()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#users.serializers.RegisterSerializer"><code class="docutils literal notranslate"><span class="pre">RegisterSerializer</span></code></a><ul>
+<li><a class="reference internal" href="#users.serializers.RegisterSerializer.Meta"><code class="docutils literal notranslate"><span class="pre">RegisterSerializer.Meta</span></code></a><ul>
+<li><a class="reference internal" href="#users.serializers.RegisterSerializer.Meta.extra_kwargs"><code class="docutils literal notranslate"><span class="pre">RegisterSerializer.Meta.extra_kwargs</span></code></a></li>
+<li><a class="reference internal" href="#users.serializers.RegisterSerializer.Meta.fields"><code class="docutils literal notranslate"><span class="pre">RegisterSerializer.Meta.fields</span></code></a></li>
+<li><a class="reference internal" href="#users.serializers.RegisterSerializer.Meta.model"><code class="docutils literal notranslate"><span class="pre">RegisterSerializer.Meta.model</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#users.serializers.RegisterSerializer.create"><code class="docutils literal notranslate"><span class="pre">RegisterSerializer.create()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-users.signals">users.signals module</a><ul>
+<li><a class="reference internal" href="#users.signals.handle_send_activation_email"><code class="docutils literal notranslate"><span class="pre">handle_send_activation_email()</span></code></a></li>
+<li><a class="reference internal" href="#users.signals.handle_send_password_reset_email"><code class="docutils literal notranslate"><span class="pre">handle_send_password_reset_email()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-users.tasks">users.tasks module</a><ul>
+<li><a class="reference internal" href="#users.tasks.send_activation_email"><code class="docutils literal notranslate"><span class="pre">send_activation_email()</span></code></a></li>
+<li><a class="reference internal" href="#users.tasks.send_password_reset_email"><code class="docutils literal notranslate"><span class="pre">send_password_reset_email()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-users.tests">users.tests module</a><ul>
+<li><a class="reference internal" href="#users.tests.ActivationViewTests"><code class="docutils literal notranslate"><span class="pre">ActivationViewTests</span></code></a><ul>
+<li><a class="reference internal" href="#users.tests.ActivationViewTests.test_activate_user"><code class="docutils literal notranslate"><span class="pre">ActivationViewTests.test_activate_user()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#users.tests.CustomUserModelTest"><code class="docutils literal notranslate"><span class="pre">CustomUserModelTest</span></code></a><ul>
+<li><a class="reference internal" href="#users.tests.CustomUserModelTest.test_super_user_can_be_created"><code class="docutils literal notranslate"><span class="pre">CustomUserModelTest.test_super_user_can_be_created()</span></code></a></li>
+<li><a class="reference internal" href="#users.tests.CustomUserModelTest.test_user_can_be_created"><code class="docutils literal notranslate"><span class="pre">CustomUserModelTest.test_user_can_be_created()</span></code></a></li>
+<li><a class="reference internal" href="#users.tests.CustomUserModelTest.test_user_model_exists"><code class="docutils literal notranslate"><span class="pre">CustomUserModelTest.test_user_model_exists()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#users.tests.LoginViewTests"><code class="docutils literal notranslate"><span class="pre">LoginViewTests</span></code></a><ul>
+<li><a class="reference internal" href="#users.tests.LoginViewTests.setUp"><code class="docutils literal notranslate"><span class="pre">LoginViewTests.setUp()</span></code></a></li>
+<li><a class="reference internal" href="#users.tests.LoginViewTests.test_activated_user_can_login"><code class="docutils literal notranslate"><span class="pre">LoginViewTests.test_activated_user_can_login()</span></code></a></li>
+<li><a class="reference internal" href="#users.tests.LoginViewTests.test_false_refresh_token"><code class="docutils literal notranslate"><span class="pre">LoginViewTests.test_false_refresh_token()</span></code></a></li>
+<li><a class="reference internal" href="#users.tests.LoginViewTests.test_refresh_token_to_get_a_new_access_token"><code class="docutils literal notranslate"><span class="pre">LoginViewTests.test_refresh_token_to_get_a_new_access_token()</span></code></a></li>
+<li><a class="reference internal" href="#users.tests.LoginViewTests.test_unactivated_user_cant_login"><code class="docutils literal notranslate"><span class="pre">LoginViewTests.test_unactivated_user_cant_login()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#users.tests.PasswordResetTests"><code class="docutils literal notranslate"><span class="pre">PasswordResetTests</span></code></a><ul>
+<li><a class="reference internal" href="#users.tests.PasswordResetTests.setUp"><code class="docutils literal notranslate"><span class="pre">PasswordResetTests.setUp()</span></code></a></li>
+<li><a class="reference internal" href="#users.tests.PasswordResetTests.test_email_with_password_reset_link_send"><code class="docutils literal notranslate"><span class="pre">PasswordResetTests.test_email_with_password_reset_link_send()</span></code></a></li>
+<li><a class="reference internal" href="#users.tests.PasswordResetTests.test_password_reset_confirm_success"><code class="docutils literal notranslate"><span class="pre">PasswordResetTests.test_password_reset_confirm_success()</span></code></a></li>
+<li><a class="reference internal" href="#users.tests.PasswordResetTests.test_password_reset_confirm_with_invalid_token"><code class="docutils literal notranslate"><span class="pre">PasswordResetTests.test_password_reset_confirm_with_invalid_token()</span></code></a></li>
+<li><a class="reference internal" href="#users.tests.PasswordResetTests.test_password_reset_confirm_with_invalid_uid"><code class="docutils literal notranslate"><span class="pre">PasswordResetTests.test_password_reset_confirm_with_invalid_uid()</span></code></a></li>
+<li><a class="reference internal" href="#users.tests.PasswordResetTests.test_password_reset_confirm_with_missing_data"><code class="docutils literal notranslate"><span class="pre">PasswordResetTests.test_password_reset_confirm_with_missing_data()</span></code></a></li>
+<li><a class="reference internal" href="#users.tests.PasswordResetTests.test_password_reset_for_inactive_user"><code class="docutils literal notranslate"><span class="pre">PasswordResetTests.test_password_reset_for_inactive_user()</span></code></a></li>
+<li><a class="reference internal" href="#users.tests.PasswordResetTests.test_password_reset_with_non_existent_email"><code class="docutils literal notranslate"><span class="pre">PasswordResetTests.test_password_reset_with_non_existent_email()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#users.tests.RegisterViewTests"><code class="docutils literal notranslate"><span class="pre">RegisterViewTests</span></code></a><ul>
+<li><a class="reference internal" href="#users.tests.RegisterViewTests.test_register_new_user"><code class="docutils literal notranslate"><span class="pre">RegisterViewTests.test_register_new_user()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#users.tests.TasksTests"><code class="docutils literal notranslate"><span class="pre">TasksTests</span></code></a><ul>
+<li><a class="reference internal" href="#users.tests.TasksTests.setUp"><code class="docutils literal notranslate"><span class="pre">TasksTests.setUp()</span></code></a></li>
+<li><a class="reference internal" href="#users.tests.TasksTests.test_send_activation_email"><code class="docutils literal notranslate"><span class="pre">TasksTests.test_send_activation_email()</span></code></a></li>
+<li><a class="reference internal" href="#users.tests.TasksTests.test_send_password_reset_email"><code class="docutils literal notranslate"><span class="pre">TasksTests.test_send_password_reset_email()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-users.urls">users.urls module</a></li>
+<li><a class="reference internal" href="#module-users.views">users.views module</a><ul>
+<li><a class="reference internal" href="#users.views.ActivateAccountView"><code class="docutils literal notranslate"><span class="pre">ActivateAccountView</span></code></a><ul>
+<li><a class="reference internal" href="#users.views.ActivateAccountView.post"><code class="docutils literal notranslate"><span class="pre">ActivateAccountView.post()</span></code></a></li>
+<li><a class="reference internal" href="#users.views.ActivateAccountView.serializer_class"><code class="docutils literal notranslate"><span class="pre">ActivateAccountView.serializer_class</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#users.views.LoginView"><code class="docutils literal notranslate"><span class="pre">LoginView</span></code></a><ul>
+<li><a class="reference internal" href="#users.views.LoginView.post"><code class="docutils literal notranslate"><span class="pre">LoginView.post()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#users.views.PasswordResetConfirmView"><code class="docutils literal notranslate"><span class="pre">PasswordResetConfirmView</span></code></a><ul>
+<li><a class="reference internal" href="#users.views.PasswordResetConfirmView.post"><code class="docutils literal notranslate"><span class="pre">PasswordResetConfirmView.post()</span></code></a></li>
+<li><a class="reference internal" href="#users.views.PasswordResetConfirmView.serializer_class"><code class="docutils literal notranslate"><span class="pre">PasswordResetConfirmView.serializer_class</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#users.views.PasswordResetView"><code class="docutils literal notranslate"><span class="pre">PasswordResetView</span></code></a><ul>
+<li><a class="reference internal" href="#users.views.PasswordResetView.post"><code class="docutils literal notranslate"><span class="pre">PasswordResetView.post()</span></code></a></li>
+<li><a class="reference internal" href="#users.views.PasswordResetView.serializer_class"><code class="docutils literal notranslate"><span class="pre">PasswordResetView.serializer_class</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#users.views.RegisterView"><code class="docutils literal notranslate"><span class="pre">RegisterView</span></code></a><ul>
+<li><a class="reference internal" href="#users.views.RegisterView.permission_classes"><code class="docutils literal notranslate"><span class="pre">RegisterView.permission_classes</span></code></a></li>
+<li><a class="reference internal" href="#users.views.RegisterView.serializer_class"><code class="docutils literal notranslate"><span class="pre">RegisterView.serializer_class</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-users">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">videoflix_backend</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">users package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/users.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="users-package">
+<h1>users package<a class="headerlink" href="#users-package" title="Link to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="users.migrations.html">users.migrations package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="users.migrations.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users.migrations.html#module-users.migrations.0001_initial">users.migrations.0001_initial module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="users.migrations.html#users.migrations.0001_initial.Migration"><code class="docutils literal notranslate"><span class="pre">Migration</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="users.migrations.html#users.migrations.0001_initial.Migration.dependencies"><code class="docutils literal notranslate"><span class="pre">Migration.dependencies</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="users.migrations.html#users.migrations.0001_initial.Migration.initial"><code class="docutils literal notranslate"><span class="pre">Migration.initial</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="users.migrations.html#users.migrations.0001_initial.Migration.operations"><code class="docutils literal notranslate"><span class="pre">Migration.operations</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="users.migrations.html#module-users.migrations">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-users.admin">
+<span id="users-admin-module"></span><h2>users.admin module<a class="headerlink" href="#module-users.admin" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="users.admin.CustomUserAdmin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">users.admin.</span></span><span class="sig-name descname"><span class="pre">CustomUserAdmin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">admin_site</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/admin.html#CustomUserAdmin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.admin.CustomUserAdmin" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">UserAdmin</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.admin.CustomUserAdmin.add_fieldsets">
+<span class="sig-name descname"><span class="pre">add_fieldsets</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">((None,</span> <span class="pre">{'classes':</span> <span class="pre">('wide',),</span> <span class="pre">'fields':</span> <span class="pre">('email',</span> <span class="pre">'first_name',</span> <span class="pre">'last_name',</span> <span class="pre">'phone',</span> <span class="pre">'address',</span> <span class="pre">'password1',</span> <span class="pre">'password2')}),)</span></em><a class="headerlink" href="#users.admin.CustomUserAdmin.add_fieldsets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.admin.CustomUserAdmin.add_form">
+<span class="sig-name descname"><span class="pre">add_form</span></span><a class="headerlink" href="#users.admin.CustomUserAdmin.add_form" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#users.forms.CustomUserCreationForm" title="users.forms.CustomUserCreationForm"><code class="xref py py-class docutils literal notranslate"><span class="pre">CustomUserCreationForm</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.admin.CustomUserAdmin.fieldsets">
+<span class="sig-name descname"><span class="pre">fieldsets</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">((None,</span> <span class="pre">{'fields':</span> <span class="pre">('email',</span> <span class="pre">'password')}),</span> <span class="pre">('Personal</span> <span class="pre">Info',</span> <span class="pre">{'fields':</span> <span class="pre">('first_name',</span> <span class="pre">'last_name',</span> <span class="pre">'phone',</span> <span class="pre">'address')}),</span> <span class="pre">('Permissions',</span> <span class="pre">{'fields':</span> <span class="pre">('is_active',</span> <span class="pre">'is_staff',</span> <span class="pre">'is_superuser',</span> <span class="pre">'groups',</span> <span class="pre">'user_permissions')}),</span> <span class="pre">('Important</span> <span class="pre">Dates',</span> <span class="pre">{'fields':</span> <span class="pre">('last_login',</span> <span class="pre">'date_joined')}))</span></em><a class="headerlink" href="#users.admin.CustomUserAdmin.fieldsets" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.admin.CustomUserAdmin.form">
+<span class="sig-name descname"><span class="pre">form</span></span><a class="headerlink" href="#users.admin.CustomUserAdmin.form" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#users.forms.CustomUserChangeForm" title="users.forms.CustomUserChangeForm"><code class="xref py py-class docutils literal notranslate"><span class="pre">CustomUserChangeForm</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.admin.CustomUserAdmin.list_display">
+<span class="sig-name descname"><span class="pre">list_display</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('email',</span> <span class="pre">'first_name',</span> <span class="pre">'last_name')</span></em><a class="headerlink" href="#users.admin.CustomUserAdmin.list_display" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="users.admin.CustomUserAdmin.media">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#users.admin.CustomUserAdmin.media" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.admin.CustomUserAdmin.ordering">
+<span class="sig-name descname"><span class="pre">ordering</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('email',</span> <span class="pre">'first_name',</span> <span class="pre">'last_name')</span></em><a class="headerlink" href="#users.admin.CustomUserAdmin.ordering" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.admin.CustomUserAdmin.readonly_fields">
+<span class="sig-name descname"><span class="pre">readonly_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('date_joined',)</span></em><a class="headerlink" href="#users.admin.CustomUserAdmin.readonly_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="users.admin.UsersResource">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">users.admin.</span></span><span class="sig-name descname"><span class="pre">UsersResource</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/admin.html#UsersResource"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.admin.UsersResource" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelResource</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="users.admin.UsersResource.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="reference internal" href="_modules/users/admin.html#UsersResource.Meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.admin.UsersResource.Meta" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.admin.UsersResource.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#users.admin.UsersResource.Meta.model" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#users.models.CustomUser" title="users.models.CustomUser"><code class="xref py py-class docutils literal notranslate"><span class="pre">CustomUser</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.admin.UsersResource.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'address':</span> <span class="pre">&lt;import_export.fields.Field:</span> <span class="pre">address&gt;,</span> <span class="pre">'date_joined':</span> <span class="pre">&lt;import_export.fields.Field:</span> <span class="pre">date_joined&gt;,</span> <span class="pre">'email':</span> <span class="pre">&lt;import_export.fields.Field:</span> <span class="pre">email&gt;,</span> <span class="pre">'first_name':</span> <span class="pre">&lt;import_export.fields.Field:</span> <span class="pre">first_name&gt;,</span> <span class="pre">'groups':</span> <span class="pre">&lt;import_export.fields.Field:</span> <span class="pre">groups&gt;,</span> <span class="pre">'id':</span> <span class="pre">&lt;import_export.fields.Field:</span> <span class="pre">id&gt;,</span> <span class="pre">'is_active':</span> <span class="pre">&lt;import_export.fields.Field:</span> <span class="pre">is_active&gt;,</span> <span class="pre">'is_staff':</span> <span class="pre">&lt;import_export.fields.Field:</span> <span class="pre">is_staff&gt;,</span> <span class="pre">'is_superuser':</span> <span class="pre">&lt;import_export.fields.Field:</span> <span class="pre">is_superuser&gt;,</span> <span class="pre">'last_login':</span> <span class="pre">&lt;import_export.fields.Field:</span> <span class="pre">last_login&gt;,</span> <span class="pre">'last_name':</span> <span class="pre">&lt;import_export.fields.Field:</span> <span class="pre">last_name&gt;,</span> <span class="pre">'password':</span> <span class="pre">&lt;import_export.fields.Field:</span> <span class="pre">password&gt;,</span> <span class="pre">'phone':</span> <span class="pre">&lt;import_export.fields.Field:</span> <span class="pre">phone&gt;,</span> <span class="pre">'user_permissions':</span> <span class="pre">&lt;import_export.fields.Field:</span> <span class="pre">user_permissions&gt;}</span></em><a class="headerlink" href="#users.admin.UsersResource.fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-users.apps">
+<span id="users-apps-module"></span><h2>users.apps module<a class="headerlink" href="#module-users.apps" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="users.apps.UsersConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">users.apps.</span></span><span class="sig-name descname"><span class="pre">UsersConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_module</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/apps.html#UsersConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.apps.UsersConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">AppConfig</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.apps.UsersConfig.default_auto_field">
+<span class="sig-name descname"><span class="pre">default_auto_field</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'django.db.models.BigAutoField'</span></em><a class="headerlink" href="#users.apps.UsersConfig.default_auto_field" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.apps.UsersConfig.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'users'</span></em><a class="headerlink" href="#users.apps.UsersConfig.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="users.apps.UsersConfig.ready">
+<span class="sig-name descname"><span class="pre">ready</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/users/apps.html#UsersConfig.ready"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.apps.UsersConfig.ready" title="Link to this definition"></a></dt>
+<dd><p>Override this method in subclasses to run code when Django starts.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-users.forms">
+<span id="users-forms-module"></span><h2>users.forms module<a class="headerlink" href="#module-users.forms" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="users.forms.CustomUserChangeForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">users.forms.</span></span><span class="sig-name descname"><span class="pre">CustomUserChangeForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/forms.html#CustomUserChangeForm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.forms.CustomUserChangeForm" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">UserChangeForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="users.forms.CustomUserChangeForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="reference internal" href="_modules/users/forms.html#CustomUserChangeForm.Meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.forms.CustomUserChangeForm.Meta" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.forms.CustomUserChangeForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'__all__'</span></em><a class="headerlink" href="#users.forms.CustomUserChangeForm.Meta.fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.forms.CustomUserChangeForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#users.forms.CustomUserChangeForm.Meta.model" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#users.models.CustomUser" title="users.models.CustomUser"><code class="xref py py-class docutils literal notranslate"><span class="pre">CustomUser</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.forms.CustomUserChangeForm.base_fields">
+<span class="sig-name descname"><span class="pre">base_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'address':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'email':</span> <span class="pre">&lt;django.forms.fields.EmailField</span> <span class="pre">object&gt;,</span> <span class="pre">'first_name':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'groups':</span> <span class="pre">&lt;django.forms.models.ModelMultipleChoiceField</span> <span class="pre">object&gt;,</span> <span class="pre">'is_active':</span> <span class="pre">&lt;django.forms.fields.BooleanField</span> <span class="pre">object&gt;,</span> <span class="pre">'is_staff':</span> <span class="pre">&lt;django.forms.fields.BooleanField</span> <span class="pre">object&gt;,</span> <span class="pre">'is_superuser':</span> <span class="pre">&lt;django.forms.fields.BooleanField</span> <span class="pre">object&gt;,</span> <span class="pre">'last_login':</span> <span class="pre">&lt;django.forms.fields.DateTimeField</span> <span class="pre">object&gt;,</span> <span class="pre">'last_name':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'password':</span> <span class="pre">&lt;django.contrib.auth.forms.ReadOnlyPasswordHashField</span> <span class="pre">object&gt;,</span> <span class="pre">'phone':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'user_permissions':</span> <span class="pre">&lt;django.forms.models.ModelMultipleChoiceField</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#users.forms.CustomUserChangeForm.base_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.forms.CustomUserChangeForm.declared_fields">
+<span class="sig-name descname"><span class="pre">declared_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'password':</span> <span class="pre">&lt;django.contrib.auth.forms.ReadOnlyPasswordHashField</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#users.forms.CustomUserChangeForm.declared_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="users.forms.CustomUserChangeForm.media">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#users.forms.CustomUserChangeForm.media" title="Link to this definition"></a></dt>
+<dd><p>Return all media required to render the widgets on this form.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="users.forms.CustomUserCreationForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">users.forms.</span></span><span class="sig-name descname"><span class="pre">CustomUserCreationForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/forms.html#CustomUserCreationForm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.forms.CustomUserCreationForm" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">UserCreationForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="users.forms.CustomUserCreationForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="reference internal" href="_modules/users/forms.html#CustomUserCreationForm.Meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.forms.CustomUserCreationForm.Meta" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.forms.CustomUserCreationForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('email',</span> <span class="pre">'first_name',</span> <span class="pre">'last_name',</span> <span class="pre">'phone',</span> <span class="pre">'address',</span> <span class="pre">'password1',</span> <span class="pre">'password2')</span></em><a class="headerlink" href="#users.forms.CustomUserCreationForm.Meta.fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.forms.CustomUserCreationForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#users.forms.CustomUserCreationForm.Meta.model" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#users.models.CustomUser" title="users.models.CustomUser"><code class="xref py py-class docutils literal notranslate"><span class="pre">CustomUser</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.forms.CustomUserCreationForm.base_fields">
+<span class="sig-name descname"><span class="pre">base_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'address':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'email':</span> <span class="pre">&lt;django.forms.fields.EmailField</span> <span class="pre">object&gt;,</span> <span class="pre">'first_name':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'last_name':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'password1':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'password2':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'phone':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#users.forms.CustomUserCreationForm.base_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.forms.CustomUserCreationForm.declared_fields">
+<span class="sig-name descname"><span class="pre">declared_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'password1':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;,</span> <span class="pre">'password2':</span> <span class="pre">&lt;django.forms.fields.CharField</span> <span class="pre">object&gt;}</span></em><a class="headerlink" href="#users.forms.CustomUserCreationForm.declared_fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="users.forms.CustomUserCreationForm.media">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">media</span></span><a class="headerlink" href="#users.forms.CustomUserCreationForm.media" title="Link to this definition"></a></dt>
+<dd><p>Return all media required to render the widgets on this form.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-users.models">
+<span id="users-models-module"></span><h2>users.models module<a class="headerlink" href="#module-users.models" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="users.models.CustomUser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">users.models.</span></span><span class="sig-name descname"><span class="pre">CustomUser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_login</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_superuser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phone</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_active</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_staff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_joined</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/models.html#CustomUser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.models.CustomUser" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractBaseUser</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">PermissionsMixin</span></code></p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="users.models.CustomUser.DoesNotExist">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#users.models.CustomUser.DoesNotExist" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="users.models.CustomUser.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#users.models.CustomUser.MultipleObjectsReturned" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.models.CustomUser.REQUIRED_FIELDS">
+<span class="sig-name descname"><span class="pre">REQUIRED_FIELDS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#users.models.CustomUser.REQUIRED_FIELDS" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.models.CustomUser.USERNAME_FIELD">
+<span class="sig-name descname"><span class="pre">USERNAME_FIELD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'email'</span></em><a class="headerlink" href="#users.models.CustomUser.USERNAME_FIELD" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.models.CustomUser.address">
+<span class="sig-name descname"><span class="pre">address</span></span><a class="headerlink" href="#users.models.CustomUser.address" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.models.CustomUser.date_joined">
+<span class="sig-name descname"><span class="pre">date_joined</span></span><a class="headerlink" href="#users.models.CustomUser.date_joined" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.models.CustomUser.email">
+<span class="sig-name descname"><span class="pre">email</span></span><a class="headerlink" href="#users.models.CustomUser.email" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.models.CustomUser.first_name">
+<span class="sig-name descname"><span class="pre">first_name</span></span><a class="headerlink" href="#users.models.CustomUser.first_name" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="users.models.CustomUser.get_next_by_date_joined">
+<span class="sig-name descname"><span class="pre">get_next_by_date_joined</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field=&lt;django.db.models.fields.DateTimeField:</span> <span class="pre">date_joined&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_next=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#users.models.CustomUser.get_next_by_date_joined" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="users.models.CustomUser.get_previous_by_date_joined">
+<span class="sig-name descname"><span class="pre">get_previous_by_date_joined</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field=&lt;django.db.models.fields.DateTimeField:</span> <span class="pre">date_joined&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_next=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#users.models.CustomUser.get_previous_by_date_joined" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.models.CustomUser.groups">
+<span class="sig-name descname"><span class="pre">groups</span></span><a class="headerlink" href="#users.models.CustomUser.groups" title="Link to this definition"></a></dt>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Pizza.toppings</span></code> and <code class="docutils literal notranslate"><span class="pre">Topping.pizzas</span></code> are <code class="docutils literal notranslate"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.models.CustomUser.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#users.models.CustomUser.id" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.models.CustomUser.is_active">
+<span class="sig-name descname"><span class="pre">is_active</span></span><a class="headerlink" href="#users.models.CustomUser.is_active" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.models.CustomUser.is_staff">
+<span class="sig-name descname"><span class="pre">is_staff</span></span><a class="headerlink" href="#users.models.CustomUser.is_staff" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.models.CustomUser.is_superuser">
+<span class="sig-name descname"><span class="pre">is_superuser</span></span><a class="headerlink" href="#users.models.CustomUser.is_superuser" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.models.CustomUser.last_login">
+<span class="sig-name descname"><span class="pre">last_login</span></span><a class="headerlink" href="#users.models.CustomUser.last_login" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.models.CustomUser.last_name">
+<span class="sig-name descname"><span class="pre">last_name</span></span><a class="headerlink" href="#users.models.CustomUser.last_name" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.models.CustomUser.logentry_set">
+<span class="sig-name descname"><span class="pre">logentry_set</span></span><a class="headerlink" href="#users.models.CustomUser.logentry_set" title="Link to this definition"></a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Parent.children</span></code> is a <code class="docutils literal notranslate"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.models.CustomUser.objects">
+<span class="sig-name descname"><span class="pre">objects</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;users.models.CustomUserManager</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#users.models.CustomUser.objects" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.models.CustomUser.password">
+<span class="sig-name descname"><span class="pre">password</span></span><a class="headerlink" href="#users.models.CustomUser.password" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.models.CustomUser.phone">
+<span class="sig-name descname"><span class="pre">phone</span></span><a class="headerlink" href="#users.models.CustomUser.phone" title="Link to this definition"></a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.models.CustomUser.user_permissions">
+<span class="sig-name descname"><span class="pre">user_permissions</span></span><a class="headerlink" href="#users.models.CustomUser.user_permissions" title="Link to this definition"></a></dt>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Pizza.toppings</span></code> and <code class="docutils literal notranslate"><span class="pre">Topping.pizzas</span></code> are <code class="docutils literal notranslate"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal notranslate"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="users.models.CustomUserManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">users.models.</span></span><span class="sig-name descname"><span class="pre">CustomUserManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/models.html#CustomUserManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.models.CustomUserManager" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseUserManager</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="users.models.CustomUserManager.create_superuser">
+<span class="sig-name descname"><span class="pre">create_superuser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">extra_fields</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/models.html#CustomUserManager.create_superuser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.models.CustomUserManager.create_superuser" title="Link to this definition"></a></dt>
+<dd><p>Create and return a superuser with an email and password.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="users.models.CustomUserManager.create_user">
+<span class="sig-name descname"><span class="pre">create_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">extra_fields</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/models.html#CustomUserManager.create_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.models.CustomUserManager.create_user" title="Link to this definition"></a></dt>
+<dd><p>Create and return a regular user with an email and password.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-users.serializers">
+<span id="users-serializers-module"></span><h2>users.serializers module<a class="headerlink" href="#module-users.serializers" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="users.serializers.ActivateAccountSerializer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">users.serializers.</span></span><span class="sig-name descname"><span class="pre">ActivateAccountSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/serializers.html#ActivateAccountSerializer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.serializers.ActivateAccountSerializer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Serializer</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="users.serializers.ActivateAccountSerializer.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/serializers.html#ActivateAccountSerializer.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.serializers.ActivateAccountSerializer.save" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="users.serializers.ActivateAccountSerializer.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attrs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/serializers.html#ActivateAccountSerializer.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.serializers.ActivateAccountSerializer.validate" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="users.serializers.PasswordResetConfirmSerializer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">users.serializers.</span></span><span class="sig-name descname"><span class="pre">PasswordResetConfirmSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/serializers.html#PasswordResetConfirmSerializer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.serializers.PasswordResetConfirmSerializer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Serializer</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="users.serializers.PasswordResetConfirmSerializer.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/serializers.html#PasswordResetConfirmSerializer.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.serializers.PasswordResetConfirmSerializer.save" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="users.serializers.PasswordResetConfirmSerializer.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attrs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/serializers.html#PasswordResetConfirmSerializer.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.serializers.PasswordResetConfirmSerializer.validate" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="users.serializers.PasswordResetSerializer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">users.serializers.</span></span><span class="sig-name descname"><span class="pre">PasswordResetSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/serializers.html#PasswordResetSerializer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.serializers.PasswordResetSerializer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Serializer</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="users.serializers.PasswordResetSerializer.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/serializers.html#PasswordResetSerializer.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.serializers.PasswordResetSerializer.save" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="users.serializers.RegisterSerializer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">users.serializers.</span></span><span class="sig-name descname"><span class="pre">RegisterSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/serializers.html#RegisterSerializer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.serializers.RegisterSerializer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ModelSerializer</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="users.serializers.RegisterSerializer.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="reference internal" href="_modules/users/serializers.html#RegisterSerializer.Meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.serializers.RegisterSerializer.Meta" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.serializers.RegisterSerializer.Meta.extra_kwargs">
+<span class="sig-name descname"><span class="pre">extra_kwargs</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'password':</span> <span class="pre">{'write_only':</span> <span class="pre">True}}</span></em><a class="headerlink" href="#users.serializers.RegisterSerializer.Meta.extra_kwargs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.serializers.RegisterSerializer.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['email',</span> <span class="pre">'password']</span></em><a class="headerlink" href="#users.serializers.RegisterSerializer.Meta.fields" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.serializers.RegisterSerializer.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#users.serializers.RegisterSerializer.Meta.model" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#users.models.CustomUser" title="users.models.CustomUser"><code class="xref py py-class docutils literal notranslate"><span class="pre">CustomUser</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="users.serializers.RegisterSerializer.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">validated_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/serializers.html#RegisterSerializer.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.serializers.RegisterSerializer.create" title="Link to this definition"></a></dt>
+<dd><p>Create a new CustomUser instance with the provided validated data.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>CustomUser: The newly created user instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-users.signals">
+<span id="users-signals-module"></span><h2>users.signals module<a class="headerlink" href="#module-users.signals" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="users.signals.handle_send_activation_email">
+<span class="sig-prename descclassname"><span class="pre">users.signals.</span></span><span class="sig-name descname"><span class="pre">handle_send_activation_email</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sender</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">created</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/signals.html#handle_send_activation_email"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.signals.handle_send_activation_email" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="users.signals.handle_send_password_reset_email">
+<span class="sig-prename descclassname"><span class="pre">users.signals.</span></span><span class="sig-name descname"><span class="pre">handle_send_password_reset_email</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sender</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/signals.html#handle_send_password_reset_email"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.signals.handle_send_password_reset_email" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-users.tasks">
+<span id="users-tasks-module"></span><h2>users.tasks module<a class="headerlink" href="#module-users.tasks" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="users.tasks.send_activation_email">
+<span class="sig-prename descclassname"><span class="pre">users.tasks.</span></span><span class="sig-name descname"><span class="pre">send_activation_email</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tasks.html#send_activation_email"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tasks.send_activation_email" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="users.tasks.send_password_reset_email">
+<span class="sig-prename descclassname"><span class="pre">users.tasks.</span></span><span class="sig-name descname"><span class="pre">send_password_reset_email</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tasks.html#send_password_reset_email"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tasks.send_password_reset_email" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-users.tests">
+<span id="users-tests-module"></span><h2>users.tests module<a class="headerlink" href="#module-users.tests" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="users.tests.ActivationViewTests">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">users.tests.</span></span><span class="sig-name descname"><span class="pre">ActivationViewTests</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#ActivationViewTests"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.ActivationViewTests" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">APITestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="users.tests.ActivationViewTests.test_activate_user">
+<span class="sig-name descname"><span class="pre">test_activate_user</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#ActivationViewTests.test_activate_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.ActivationViewTests.test_activate_user" title="Link to this definition"></a></dt>
+<dd><p>Ensure that the activation link activates the user.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="users.tests.CustomUserModelTest">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">users.tests.</span></span><span class="sig-name descname"><span class="pre">CustomUserModelTest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#CustomUserModelTest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.CustomUserModelTest" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="users.tests.CustomUserModelTest.test_super_user_can_be_created">
+<span class="sig-name descname"><span class="pre">test_super_user_can_be_created</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#CustomUserModelTest.test_super_user_can_be_created"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.CustomUserModelTest.test_super_user_can_be_created" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="users.tests.CustomUserModelTest.test_user_can_be_created">
+<span class="sig-name descname"><span class="pre">test_user_can_be_created</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#CustomUserModelTest.test_user_can_be_created"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.CustomUserModelTest.test_user_can_be_created" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="users.tests.CustomUserModelTest.test_user_model_exists">
+<span class="sig-name descname"><span class="pre">test_user_model_exists</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#CustomUserModelTest.test_user_model_exists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.CustomUserModelTest.test_user_model_exists" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="users.tests.LoginViewTests">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">users.tests.</span></span><span class="sig-name descname"><span class="pre">LoginViewTests</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#LoginViewTests"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.LoginViewTests" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">APITestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="users.tests.LoginViewTests.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#LoginViewTests.setUp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.LoginViewTests.setUp" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="users.tests.LoginViewTests.test_activated_user_can_login">
+<span class="sig-name descname"><span class="pre">test_activated_user_can_login</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#LoginViewTests.test_activated_user_can_login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.LoginViewTests.test_activated_user_can_login" title="Link to this definition"></a></dt>
+<dd><p>Ensure an activated user can login.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="users.tests.LoginViewTests.test_false_refresh_token">
+<span class="sig-name descname"><span class="pre">test_false_refresh_token</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#LoginViewTests.test_false_refresh_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.LoginViewTests.test_false_refresh_token" title="Link to this definition"></a></dt>
+<dd><p>Test false refresh token.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="users.tests.LoginViewTests.test_refresh_token_to_get_a_new_access_token">
+<span class="sig-name descname"><span class="pre">test_refresh_token_to_get_a_new_access_token</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#LoginViewTests.test_refresh_token_to_get_a_new_access_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.LoginViewTests.test_refresh_token_to_get_a_new_access_token" title="Link to this definition"></a></dt>
+<dd><p>Ensure user can use the refresh token to get a new access token.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="users.tests.LoginViewTests.test_unactivated_user_cant_login">
+<span class="sig-name descname"><span class="pre">test_unactivated_user_cant_login</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#LoginViewTests.test_unactivated_user_cant_login"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.LoginViewTests.test_unactivated_user_cant_login" title="Link to this definition"></a></dt>
+<dd><p>Ensure an unactivated user can’t login.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="users.tests.PasswordResetTests">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">users.tests.</span></span><span class="sig-name descname"><span class="pre">PasswordResetTests</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#PasswordResetTests"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.PasswordResetTests" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">APITestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="users.tests.PasswordResetTests.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#PasswordResetTests.setUp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.PasswordResetTests.setUp" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="users.tests.PasswordResetTests.test_email_with_password_reset_link_send">
+<span class="sig-name descname"><span class="pre">test_email_with_password_reset_link_send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mock_queue</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#PasswordResetTests.test_email_with_password_reset_link_send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.PasswordResetTests.test_email_with_password_reset_link_send" title="Link to this definition"></a></dt>
+<dd><p>Ensure a password reset link gets created.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="users.tests.PasswordResetTests.test_password_reset_confirm_success">
+<span class="sig-name descname"><span class="pre">test_password_reset_confirm_success</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#PasswordResetTests.test_password_reset_confirm_success"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.PasswordResetTests.test_password_reset_confirm_success" title="Link to this definition"></a></dt>
+<dd><p>Ensure the password reset confirm works with an apropriate link.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="users.tests.PasswordResetTests.test_password_reset_confirm_with_invalid_token">
+<span class="sig-name descname"><span class="pre">test_password_reset_confirm_with_invalid_token</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#PasswordResetTests.test_password_reset_confirm_with_invalid_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.PasswordResetTests.test_password_reset_confirm_with_invalid_token" title="Link to this definition"></a></dt>
+<dd><p>Ensure password reset fails with an invalid token.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="users.tests.PasswordResetTests.test_password_reset_confirm_with_invalid_uid">
+<span class="sig-name descname"><span class="pre">test_password_reset_confirm_with_invalid_uid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#PasswordResetTests.test_password_reset_confirm_with_invalid_uid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.PasswordResetTests.test_password_reset_confirm_with_invalid_uid" title="Link to this definition"></a></dt>
+<dd><p>Ensure password reset fails with an invalid uid.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="users.tests.PasswordResetTests.test_password_reset_confirm_with_missing_data">
+<span class="sig-name descname"><span class="pre">test_password_reset_confirm_with_missing_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#PasswordResetTests.test_password_reset_confirm_with_missing_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.PasswordResetTests.test_password_reset_confirm_with_missing_data" title="Link to this definition"></a></dt>
+<dd><p>Ensure password reset fails when required data is missing.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="users.tests.PasswordResetTests.test_password_reset_for_inactive_user">
+<span class="sig-name descname"><span class="pre">test_password_reset_for_inactive_user</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#PasswordResetTests.test_password_reset_for_inactive_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.PasswordResetTests.test_password_reset_for_inactive_user" title="Link to this definition"></a></dt>
+<dd><p>Ensure password reset does not work for inactive users.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="users.tests.PasswordResetTests.test_password_reset_with_non_existent_email">
+<span class="sig-name descname"><span class="pre">test_password_reset_with_non_existent_email</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mock_queue</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#PasswordResetTests.test_password_reset_with_non_existent_email"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.PasswordResetTests.test_password_reset_with_non_existent_email" title="Link to this definition"></a></dt>
+<dd><p>Ensure that no error is raised when a non-existent email is provided.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="users.tests.RegisterViewTests">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">users.tests.</span></span><span class="sig-name descname"><span class="pre">RegisterViewTests</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#RegisterViewTests"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.RegisterViewTests" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">APITestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="users.tests.RegisterViewTests.test_register_new_user">
+<span class="sig-name descname"><span class="pre">test_register_new_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mock_enqueue</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#RegisterViewTests.test_register_new_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.RegisterViewTests.test_register_new_user" title="Link to this definition"></a></dt>
+<dd><p>Ensure a new user can be registered and a confirmation email has been send.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="users.tests.TasksTests">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">users.tests.</span></span><span class="sig-name descname"><span class="pre">TasksTests</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#TasksTests"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.TasksTests" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="users.tests.TasksTests.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#TasksTests.setUp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.TasksTests.setUp" title="Link to this definition"></a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="users.tests.TasksTests.test_send_activation_email">
+<span class="sig-name descname"><span class="pre">test_send_activation_email</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#TasksTests.test_send_activation_email"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.TasksTests.test_send_activation_email" title="Link to this definition"></a></dt>
+<dd><p>Ensure activation email gets send.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="users.tests.TasksTests.test_send_password_reset_email">
+<span class="sig-name descname"><span class="pre">test_send_password_reset_email</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/tests.html#TasksTests.test_send_password_reset_email"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.tests.TasksTests.test_send_password_reset_email" title="Link to this definition"></a></dt>
+<dd><p>Ensure password reset email gets send.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-users.urls">
+<span id="users-urls-module"></span><h2>users.urls module<a class="headerlink" href="#module-users.urls" title="Link to this heading"></a></h2>
+</section>
+<section id="module-users.views">
+<span id="users-views-module"></span><h2>users.views module<a class="headerlink" href="#module-users.views" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="users.views.ActivateAccountView">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">users.views.</span></span><span class="sig-name descname"><span class="pre">ActivateAccountView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/views.html#ActivateAccountView"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.views.ActivateAccountView" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">APIView</span></code></p>
+<p>View to activate user account via activation link.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="users.views.ActivateAccountView.post">
+<span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/views.html#ActivateAccountView.post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.views.ActivateAccountView.post" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.views.ActivateAccountView.serializer_class">
+<span class="sig-name descname"><span class="pre">serializer_class</span></span><a class="headerlink" href="#users.views.ActivateAccountView.serializer_class" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#users.serializers.ActivateAccountSerializer" title="users.serializers.ActivateAccountSerializer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ActivateAccountSerializer</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="users.views.LoginView">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">users.views.</span></span><span class="sig-name descname"><span class="pre">LoginView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/views.html#LoginView"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.views.LoginView" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">APIView</span></code></p>
+<p>View to login the user and receive refresh and access tokens for authentication.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="users.views.LoginView.post">
+<span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/views.html#LoginView.post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.views.LoginView.post" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="users.views.PasswordResetConfirmView">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">users.views.</span></span><span class="sig-name descname"><span class="pre">PasswordResetConfirmView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/views.html#PasswordResetConfirmView"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.views.PasswordResetConfirmView" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">APIView</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="users.views.PasswordResetConfirmView.post">
+<span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/views.html#PasswordResetConfirmView.post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.views.PasswordResetConfirmView.post" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.views.PasswordResetConfirmView.serializer_class">
+<span class="sig-name descname"><span class="pre">serializer_class</span></span><a class="headerlink" href="#users.views.PasswordResetConfirmView.serializer_class" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#users.serializers.PasswordResetConfirmSerializer" title="users.serializers.PasswordResetConfirmSerializer"><code class="xref py py-class docutils literal notranslate"><span class="pre">PasswordResetConfirmSerializer</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="users.views.PasswordResetView">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">users.views.</span></span><span class="sig-name descname"><span class="pre">PasswordResetView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/views.html#PasswordResetView"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.views.PasswordResetView" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">APIView</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="users.views.PasswordResetView.post">
+<span class="sig-name descname"><span class="pre">post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/views.html#PasswordResetView.post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.views.PasswordResetView.post" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.views.PasswordResetView.serializer_class">
+<span class="sig-name descname"><span class="pre">serializer_class</span></span><a class="headerlink" href="#users.views.PasswordResetView.serializer_class" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#users.serializers.PasswordResetSerializer" title="users.serializers.PasswordResetSerializer"><code class="xref py py-class docutils literal notranslate"><span class="pre">PasswordResetSerializer</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="users.views.RegisterView">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">users.views.</span></span><span class="sig-name descname"><span class="pre">RegisterView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/users/views.html#RegisterView"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#users.views.RegisterView" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">CreateAPIView</span></code></p>
+<p>View for user registration.</p>
+<p>Provides an endpoint for creating new user accounts.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.views.RegisterView.permission_classes">
+<span class="sig-name descname"><span class="pre">permission_classes</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[&lt;class</span> <span class="pre">'rest_framework.permissions.AllowAny'&gt;]</span></em><a class="headerlink" href="#users.views.RegisterView.permission_classes" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="users.views.RegisterView.serializer_class">
+<span class="sig-name descname"><span class="pre">serializer_class</span></span><a class="headerlink" href="#users.views.RegisterView.serializer_class" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#users.serializers.RegisterSerializer" title="users.serializers.RegisterSerializer"><code class="xref py py-class docutils literal notranslate"><span class="pre">RegisterSerializer</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-users">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-users" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Ricardo Geada.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

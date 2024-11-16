@@ -1,0 +1,571 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>users.tests &mdash; videoflix_backend 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            videoflix_backend
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">videoflix_backend</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">users.tests</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for users.tests</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">unittest.mock</span> <span class="kn">import</span> <span class="n">patch</span>
+<span class="kn">from</span> <span class="nn">django.test</span> <span class="kn">import</span> <span class="n">TestCase</span>
+
+<span class="kn">from</span> <span class="nn">users.tasks</span> <span class="kn">import</span> <span class="n">send_activation_email</span><span class="p">,</span> <span class="n">send_password_reset_email</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">CustomUser</span>
+<span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
+
+<span class="kn">from</span> <span class="nn">rest_framework.test</span> <span class="kn">import</span> <span class="n">APITestCase</span>
+<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">status</span>
+<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
+
+<span class="kn">from</span> <span class="nn">django.core</span> <span class="kn">import</span> <span class="n">mail</span>
+<span class="kn">from</span> <span class="nn">django.utils.http</span> <span class="kn">import</span> <span class="n">urlsafe_base64_encode</span>
+<span class="kn">from</span> <span class="nn">django.utils.encoding</span> <span class="kn">import</span> <span class="n">force_bytes</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.tokens</span> <span class="kn">import</span> <span class="n">default_token_generator</span>
+
+<span class="c1"># Create your tests here.</span>
+<div class="viewcode-block" id="CustomUserModelTest">
+<a class="viewcode-back" href="../../users.html#users.tests.CustomUserModelTest">[docs]</a>
+<span class="k">class</span> <span class="nc">CustomUserModelTest</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+    
+<div class="viewcode-block" id="CustomUserModelTest.test_user_model_exists">
+<a class="viewcode-back" href="../../users.html#users.tests.CustomUserModelTest.test_user_model_exists">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_user_model_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">users</span> <span class="o">=</span> <span class="n">CustomUser</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+
+        
+    
+<div class="viewcode-block" id="CustomUserModelTest.test_user_can_be_created">
+<a class="viewcode-back" href="../../users.html#users.tests.CustomUserModelTest.test_user_can_be_created">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_user_can_be_created</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">new_user</span> <span class="o">=</span> <span class="n">CustomUser</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s1">&#39;user@mail.com&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;password&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="s1">&#39;user@mail.com&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">check_password</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">phone</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">is_active</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">is_staff</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">now</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertLessEqual</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">date_joined</span><span class="p">,</span> <span class="n">now</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertGreaterEqual</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">date_joined</span><span class="p">,</span> <span class="n">now</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span></div>
+
+
+    
+<div class="viewcode-block" id="CustomUserModelTest.test_super_user_can_be_created">
+<a class="viewcode-back" href="../../users.html#users.tests.CustomUserModelTest.test_super_user_can_be_created">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_super_user_can_be_created</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">new_user</span> <span class="o">=</span> <span class="n">CustomUser</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_superuser</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s1">&#39;user@mail.com&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;password&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="s1">&#39;user@mail.com&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">check_password</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">phone</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">is_active</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">is_staff</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">now</span> <span class="o">=</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertLessEqual</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">date_joined</span><span class="p">,</span> <span class="n">now</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertGreaterEqual</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">date_joined</span><span class="p">,</span> <span class="n">now</span> <span class="o">-</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span></div>
+</div>
+
+        
+
+<div class="viewcode-block" id="RegisterViewTests">
+<a class="viewcode-back" href="../../users.html#users.tests.RegisterViewTests">[docs]</a>
+<span class="k">class</span> <span class="nc">RegisterViewTests</span><span class="p">(</span><span class="n">APITestCase</span><span class="p">):</span>
+    
+<div class="viewcode-block" id="RegisterViewTests.test_register_new_user">
+<a class="viewcode-back" href="../../users.html#users.tests.RegisterViewTests.test_register_new_user">[docs]</a>
+    <span class="nd">@patch</span><span class="p">(</span><span class="s1">&#39;django_rq.enqueue&#39;</span><span class="p">)</span>  
+    <span class="k">def</span> <span class="nf">test_register_new_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_enqueue</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure a new user can be registered and a confirmation email has been send.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;register&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;email&#39;</span><span class="p">:</span> <span class="s1">&#39;newuser@mail.com&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="s1">&#39;newuserpassword&#39;</span>
+        <span class="p">}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;json&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_201_CREATED</span><span class="p">)</span>
+        
+        <span class="c1"># check if user exists</span>
+        <span class="n">new_user</span> <span class="o">=</span> <span class="n">CustomUser</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">new_user</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">check_password</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">]))</span>
+        
+        <span class="c1"># account is not activated</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">is_active</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        
+        <span class="c1"># check if django_rq.enqueue was called once with the correct arguments</span>
+        <span class="n">mock_enqueue</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="n">send_activation_email</span><span class="p">,</span> <span class="n">new_user</span><span class="p">)</span></div>
+</div>
+
+        
+
+<div class="viewcode-block" id="ActivationViewTests">
+<a class="viewcode-back" href="../../users.html#users.tests.ActivationViewTests">[docs]</a>
+<span class="k">class</span> <span class="nc">ActivationViewTests</span><span class="p">(</span><span class="n">APITestCase</span><span class="p">):</span>
+    
+<div class="viewcode-block" id="ActivationViewTests.test_activate_user">
+<a class="viewcode-back" href="../../users.html#users.tests.ActivationViewTests.test_activate_user">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_activate_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure that the activation link activates the user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># create new user</span>
+        <span class="n">new_user</span> <span class="o">=</span> <span class="n">CustomUser</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">email</span><span class="o">=</span><span class="s1">&#39;newuser@mail.com&#39;</span><span class="p">,</span>
+            <span class="n">password</span><span class="o">=</span><span class="s1">&#39;newuserpassword&#39;</span><span class="p">,</span>
+            <span class="n">is_active</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># generate uidb64 and token for activation link</span>
+        <span class="n">uidb64</span> <span class="o">=</span> <span class="n">urlsafe_base64_encode</span><span class="p">(</span><span class="n">force_bytes</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">pk</span><span class="p">))</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">default_token_generator</span><span class="o">.</span><span class="n">make_token</span><span class="p">(</span><span class="n">new_user</span><span class="p">)</span>       
+        <span class="n">activation_url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;activate_account&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;uidb64&#39;</span><span class="p">:</span> <span class="n">uidb64</span><span class="p">,</span>
+            <span class="s1">&#39;token&#39;</span><span class="p">:</span> <span class="n">token</span><span class="p">,</span>
+        <span class="p">}</span>
+        
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">activation_url</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;json&#39;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">)</span>
+        <span class="n">new_user</span><span class="o">.</span><span class="n">refresh_from_db</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">new_user</span><span class="o">.</span><span class="n">is_active</span><span class="p">)</span></div>
+</div>
+
+        
+
+
+<div class="viewcode-block" id="LoginViewTests">
+<a class="viewcode-back" href="../../users.html#users.tests.LoginViewTests">[docs]</a>
+<span class="k">class</span> <span class="nc">LoginViewTests</span><span class="p">(</span><span class="n">APITestCase</span><span class="p">):</span>
+    
+<div class="viewcode-block" id="LoginViewTests.setUp">
+<a class="viewcode-back" href="../../users.html#users.tests.LoginViewTests.setUp">[docs]</a>
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activated_user</span><span class="o">=</span><span class="n">CustomUser</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s1">&#39;activateduser@mail.com&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;activated&#39;</span><span class="p">,</span> <span class="n">is_active</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unactivated_user</span><span class="o">=</span><span class="n">CustomUser</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s1">&#39;unactivateduser@mail.com&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;unactivated&#39;</span><span class="p">,</span> <span class="n">is_active</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+        
+    
+<div class="viewcode-block" id="LoginViewTests.test_activated_user_can_login">
+<a class="viewcode-back" href="../../users.html#users.tests.LoginViewTests.test_activated_user_can_login">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_activated_user_can_login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure an activated user can login.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;login&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;email&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">activated_user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span>
+            <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="s1">&#39;activated&#39;</span>
+        <span class="p">}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;json&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># check for login success</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">)</span>
+        <span class="c1"># check for tokens in response</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;access&#39;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;refresh&#39;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div>
+
+        
+        
+        
+<div class="viewcode-block" id="LoginViewTests.test_unactivated_user_cant_login">
+<a class="viewcode-back" href="../../users.html#users.tests.LoginViewTests.test_unactivated_user_cant_login">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_unactivated_user_cant_login</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure an unactivated user can&#39;t login.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;login&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;email&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">unactivated_user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span>
+            <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="s1">&#39;unactivated&#39;</span>
+        <span class="p">}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;json&#39;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_401_UNAUTHORIZED</span><span class="p">)</span></div>
+
+        
+    
+    
+    <span class="c1"># def test_access_token_authentification(self):</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#     Ensure user can authenticate using the access token.</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#     # login to get access token</span>
+    <span class="c1">#     url = reverse(&#39;login&#39;)</span>
+    <span class="c1">#     data = {</span>
+    <span class="c1">#         &#39;email&#39; : self.activated_user.email,</span>
+    <span class="c1">#         &#39;password&#39;: &#39;activated&#39;</span>
+    <span class="c1">#     }</span>
+    <span class="c1">#     response = self.client.post(url, data, format=&#39;json&#39;)</span>
+    <span class="c1">#     access_token = response.data[&#39;access&#39;]</span>
+        
+    <span class="c1">#     # authenticate to protected view via access token</span>
+    <span class="c1">#     protected_url = reverse(&#39;&#39;) # TODO: Insert protected view e.g. &#39;videos&#39;</span>
+    <span class="c1">#     self.client.credentials(HTTP_AUTHORIZATION=&#39;Bearer &#39; + access_token)</span>
+    <span class="c1">#     protected_response = self.client.get(protected_url)</span>
+        
+    <span class="c1">#     self.assertEqual(protected_response.status_code, status.HTTP_200_OK)</span>
+    
+    
+<div class="viewcode-block" id="LoginViewTests.test_refresh_token_to_get_a_new_access_token">
+<a class="viewcode-back" href="../../users.html#users.tests.LoginViewTests.test_refresh_token_to_get_a_new_access_token">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_refresh_token_to_get_a_new_access_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure user can use the refresh token to get a new access token.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># login to get a refresh token</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;login&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;email&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">activated_user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span>
+            <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="s1">&#39;activated&#39;</span>
+        <span class="p">}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;json&#39;</span><span class="p">)</span>
+        
+        <span class="n">access_token</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;access&#39;</span><span class="p">]</span>
+        <span class="n">refresh_token</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;refresh&#39;</span><span class="p">]</span>
+        
+        <span class="c1"># get a new access_token from the refresh token</span>
+        <span class="n">refresh_url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;token_refresh&#39;</span><span class="p">)</span>
+        <span class="n">refresh_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;refresh&#39;</span><span class="p">:</span> <span class="n">refresh_token</span>
+        <span class="p">}</span>
+        <span class="n">refresh_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">refresh_url</span><span class="p">,</span> <span class="n">refresh_data</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;json&#39;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">refresh_response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;access&#39;</span><span class="p">,</span> <span class="n">refresh_response</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">access_token</span><span class="p">,</span> <span class="n">refresh_response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;access&#39;</span><span class="p">])</span></div>
+
+        
+        
+<div class="viewcode-block" id="LoginViewTests.test_false_refresh_token">
+<a class="viewcode-back" href="../../users.html#users.tests.LoginViewTests.test_false_refresh_token">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_false_refresh_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test false refresh token.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># login to get a refresh token</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;login&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;email&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">activated_user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span>
+            <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="s1">&#39;activated&#39;</span>
+        <span class="p">}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;json&#39;</span><span class="p">)</span>
+        
+        <span class="n">access_token</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;access&#39;</span><span class="p">]</span>
+        <span class="n">refresh_token</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;refresh&#39;</span><span class="p">]</span>
+        
+        <span class="c1"># get a new access_token from the refresh token</span>
+        <span class="n">refresh_url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;token_refresh&#39;</span><span class="p">)</span>
+        <span class="n">refresh_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;refresh&#39;</span><span class="p">:</span> <span class="s1">&#39;false_token&#39;</span>
+        <span class="p">}</span>
+        <span class="n">refresh_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">refresh_url</span><span class="p">,</span> <span class="n">refresh_data</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;json&#39;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">refresh_response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_401_UNAUTHORIZED</span><span class="p">)</span></div>
+</div>
+
+
+
+
+<div class="viewcode-block" id="PasswordResetTests">
+<a class="viewcode-back" href="../../users.html#users.tests.PasswordResetTests">[docs]</a>
+<span class="k">class</span> <span class="nc">PasswordResetTests</span><span class="p">(</span><span class="n">APITestCase</span><span class="p">):</span>
+    
+<div class="viewcode-block" id="PasswordResetTests.setUp">
+<a class="viewcode-back" href="../../users.html#users.tests.PasswordResetTests.setUp">[docs]</a>
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activated_user</span><span class="o">=</span><span class="n">CustomUser</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s1">&#39;activateduser@mail.com&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;activated&#39;</span><span class="p">,</span> <span class="n">is_active</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unactivated_user</span><span class="o">=</span><span class="n">CustomUser</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s1">&#39;unactivateduser@mail.com&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;unactivated&#39;</span><span class="p">,</span> <span class="n">is_active</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">mail</span><span class="o">.</span><span class="n">outbox</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># empty mailbox from activation email for unactivated_user</span></div>
+
+        
+    
+    <span class="c1"># reset_password</span>
+<div class="viewcode-block" id="PasswordResetTests.test_email_with_password_reset_link_send">
+<a class="viewcode-back" href="../../users.html#users.tests.PasswordResetTests.test_email_with_password_reset_link_send">[docs]</a>
+    <span class="nd">@patch</span><span class="p">(</span><span class="s1">&#39;django_rq.enqueue&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">test_email_with_password_reset_link_send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_queue</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure a password reset link gets created.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;password_reset&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;email&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">activated_user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;json&#39;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">)</span>
+        <span class="n">mock_queue</span><span class="o">.</span><span class="n">assert_called_once_with</span><span class="p">(</span><span class="n">send_password_reset_email</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">activated_user</span><span class="p">)</span></div>
+
+        
+<div class="viewcode-block" id="PasswordResetTests.test_password_reset_with_non_existent_email">
+<a class="viewcode-back" href="../../users.html#users.tests.PasswordResetTests.test_password_reset_with_non_existent_email">[docs]</a>
+    <span class="nd">@patch</span><span class="p">(</span><span class="s1">&#39;django_rq.enqueue&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">test_password_reset_with_non_existent_email</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_queue</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure that no error is raised when a non-existent email is provided.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;password_reset&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;email&#39;</span><span class="p">:</span> <span class="s1">&#39;nonexistent@mail.com&#39;</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;json&#39;</span><span class="p">)</span>
+
+        <span class="c1"># no information for the user if the email exists</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">)</span>
+        <span class="c1"># no email sent, because the user doesn&#39;t exist (no signal called)</span>
+        <span class="n">mock_queue</span><span class="o">.</span><span class="n">assert_not_called</span><span class="p">()</span></div>
+
+        
+    
+    <span class="c1"># reset_password_confirm</span>
+    
+<div class="viewcode-block" id="PasswordResetTests.test_password_reset_confirm_success">
+<a class="viewcode-back" href="../../users.html#users.tests.PasswordResetTests.test_password_reset_confirm_success">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_password_reset_confirm_success</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure the password reset confirm works with an apropriate link.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">uidb64</span> <span class="o">=</span> <span class="n">urlsafe_base64_encode</span><span class="p">(</span><span class="n">force_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">activated_user</span><span class="o">.</span><span class="n">pk</span><span class="p">))</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">default_token_generator</span><span class="o">.</span><span class="n">make_token</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">activated_user</span><span class="p">)</span> 
+        
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;password_reset_confirm&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;new_password&#39;</span><span class="p">:</span> <span class="s1">&#39;newpassword&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;uidb64&#39;</span><span class="p">:</span> <span class="n">uidb64</span><span class="p">,</span> 
+            <span class="s1">&#39;token&#39;</span><span class="p">:</span> <span class="n">token</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;json&#39;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activated_user</span><span class="o">.</span><span class="n">refresh_from_db</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">activated_user</span><span class="o">.</span><span class="n">check_password</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;new_password&#39;</span><span class="p">]))</span></div>
+
+        
+
+<div class="viewcode-block" id="PasswordResetTests.test_password_reset_confirm_with_invalid_token">
+<a class="viewcode-back" href="../../users.html#users.tests.PasswordResetTests.test_password_reset_confirm_with_invalid_token">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_password_reset_confirm_with_invalid_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure password reset fails with an invalid token.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">uidb64</span> <span class="o">=</span> <span class="n">urlsafe_base64_encode</span><span class="p">(</span><span class="n">force_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">activated_user</span><span class="o">.</span><span class="n">pk</span><span class="p">))</span>
+        <span class="n">invalid_token</span> <span class="o">=</span> <span class="s1">&#39;invalid-token&#39;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;password_reset_confirm&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;new_password&#39;</span><span class="p">:</span> <span class="s1">&#39;newpassword&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;uidb64&#39;</span><span class="p">:</span> <span class="n">uidb64</span><span class="p">,</span>
+            <span class="s1">&#39;token&#39;</span><span class="p">:</span> <span class="n">invalid_token</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;json&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_400_BAD_REQUEST</span><span class="p">)</span></div>
+
+        
+    
+<div class="viewcode-block" id="PasswordResetTests.test_password_reset_confirm_with_invalid_uid">
+<a class="viewcode-back" href="../../users.html#users.tests.PasswordResetTests.test_password_reset_confirm_with_invalid_uid">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_password_reset_confirm_with_invalid_uid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure password reset fails with an invalid uid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">invalid_uidb64</span> <span class="o">=</span> <span class="s1">&#39;invalid-uid&#39;</span>  <span class="c1"># Setze eine ungültige UID</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">default_token_generator</span><span class="o">.</span><span class="n">make_token</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">activated_user</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;password_reset_confirm&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;new_password&#39;</span><span class="p">:</span> <span class="s1">&#39;newpassword&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;uidb64&#39;</span><span class="p">:</span> <span class="n">invalid_uidb64</span><span class="p">,</span>
+            <span class="s1">&#39;token&#39;</span><span class="p">:</span> <span class="n">token</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;json&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_400_BAD_REQUEST</span><span class="p">)</span></div>
+
+        
+    
+<div class="viewcode-block" id="PasswordResetTests.test_password_reset_confirm_with_missing_data">
+<a class="viewcode-back" href="../../users.html#users.tests.PasswordResetTests.test_password_reset_confirm_with_missing_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_password_reset_confirm_with_missing_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure password reset fails when required data is missing.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">uidb64</span> <span class="o">=</span> <span class="n">urlsafe_base64_encode</span><span class="p">(</span><span class="n">force_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">activated_user</span><span class="o">.</span><span class="n">pk</span><span class="p">))</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">default_token_generator</span><span class="o">.</span><span class="n">make_token</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">activated_user</span><span class="p">)</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;password_reset_confirm&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="c1"># &#39;new_password&#39; </span>
+            <span class="s1">&#39;uidb64&#39;</span><span class="p">:</span> <span class="n">uidb64</span><span class="p">,</span>
+            <span class="s1">&#39;token&#39;</span><span class="p">:</span> <span class="n">token</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;json&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_400_BAD_REQUEST</span><span class="p">)</span></div>
+
+        
+    
+<div class="viewcode-block" id="PasswordResetTests.test_password_reset_for_inactive_user">
+<a class="viewcode-back" href="../../users.html#users.tests.PasswordResetTests.test_password_reset_for_inactive_user">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_password_reset_for_inactive_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure password reset does not work for inactive users.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">uidb64</span> <span class="o">=</span> <span class="n">urlsafe_base64_encode</span><span class="p">(</span><span class="n">force_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unactivated_user</span><span class="o">.</span><span class="n">pk</span><span class="p">))</span>
+        <span class="n">token</span> <span class="o">=</span> <span class="n">default_token_generator</span><span class="o">.</span><span class="n">make_token</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unactivated_user</span><span class="p">)</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;password_reset_confirm&#39;</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;new_password&#39;</span><span class="p">:</span> <span class="s1">&#39;newpassword&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;uidb64&#39;</span><span class="p">:</span> <span class="n">uidb64</span><span class="p">,</span>
+            <span class="s1">&#39;token&#39;</span><span class="p">:</span> <span class="n">token</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;json&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_400_BAD_REQUEST</span><span class="p">)</span></div>
+</div>
+
+
+
+
+<div class="viewcode-block" id="TasksTests">
+<a class="viewcode-back" href="../../users.html#users.tests.TasksTests">[docs]</a>
+<span class="k">class</span> <span class="nc">TasksTests</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+    
+<div class="viewcode-block" id="TasksTests.setUp">
+<a class="viewcode-back" href="../../users.html#users.tests.TasksTests.setUp">[docs]</a>
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">=</span><span class="n">CustomUser</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="s1">&#39;test@user.com&#39;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s1">&#39;password&#39;</span><span class="p">,</span> <span class="n">is_active</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="TasksTests.test_send_activation_email">
+<a class="viewcode-back" href="../../users.html#users.tests.TasksTests.test_send_activation_email">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_send_activation_email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure activation email gets send.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">send_activation_email</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mail</span><span class="o">.</span><span class="n">outbox</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Confirm your email&#39;</span><span class="p">,</span> <span class="n">mail</span><span class="o">.</span><span class="n">outbox</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">subject</span><span class="p">)</span></div>
+
+        
+        
+<div class="viewcode-block" id="TasksTests.test_send_password_reset_email">
+<a class="viewcode-back" href="../../users.html#users.tests.TasksTests.test_send_password_reset_email">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_send_password_reset_email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure password reset email gets send.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_active</span> <span class="o">=</span> <span class="kc">True</span><span class="p">;</span> 
+        <span class="n">send_password_reset_email</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mail</span><span class="o">.</span><span class="n">outbox</span><span class="p">),</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Reset your password&#39;</span><span class="p">,</span> <span class="n">mail</span><span class="o">.</span><span class="n">outbox</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">subject</span><span class="p">)</span></div>
+</div>
+
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Ricardo Geada.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

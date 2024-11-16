@@ -1,0 +1,709 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>content.tests &mdash; videoflix_backend 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            videoflix_backend
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">videoflix_backend</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">content.tests</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for content.tests</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">TemporaryDirectory</span>
+
+<span class="kn">from</span> <span class="nn">django.test</span> <span class="kn">import</span> <span class="n">override_settings</span>
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">rest_framework.test</span> <span class="kn">import</span> <span class="n">APITestCase</span>
+<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">status</span>
+<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
+
+<span class="kn">from</span> <span class="nn">content.tasks</span> <span class="kn">import</span> <span class="n">create_master_playlist</span>
+
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">GenreModel</span><span class="p">,</span> <span class="n">VideoModel</span>
+<span class="kn">from</span> <span class="nn">users.models</span> <span class="kn">import</span> <span class="n">CustomUser</span>
+
+<span class="kn">from</span> <span class="nn">rest_framework_simplejwt.tokens</span> <span class="kn">import</span> <span class="n">RefreshToken</span>
+
+<span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">urlencode</span>
+
+<span class="kn">from</span> <span class="nn">django.core.files</span> <span class="kn">import</span> <span class="n">File</span>
+
+<span class="kn">from</span> <span class="nn">unittest</span> <span class="kn">import</span> <span class="n">mock</span>
+
+<span class="kn">from</span> <span class="nn">django.core.files.uploadedfile</span> <span class="kn">import</span> <span class="n">SimpleUploadedFile</span>
+
+
+<span class="c1"># Create your tests here.</span>
+<div class="viewcode-block" id="GenreAPITests">
+<a class="viewcode-back" href="../../content.html#content.tests.GenreAPITests">[docs]</a>
+<span class="nd">@override_settings</span><span class="p">(</span><span class="n">MEDIA_ROOT</span><span class="o">=</span><span class="n">TemporaryDirectory</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">GenreAPITests</span><span class="p">(</span><span class="n">APITestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GenreAPITests.setUp">
+<a class="viewcode-back" href="../../content.html#content.tests.GenreAPITests.setUp">[docs]</a>
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">genre_action</span> <span class="o">=</span> <span class="n">GenreModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Action&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">genre_comedy</span> <span class="o">=</span> <span class="n">GenreModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Comedy&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">CustomUser</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">email</span><span class="o">=</span><span class="s2">&quot;test@user.com&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;testpassword&quot;</span><span class="p">,</span> <span class="n">is_active</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenreAPITests.authenticate_user">
+<a class="viewcode-back" href="../../content.html#content.tests.GenreAPITests.authenticate_user">[docs]</a>
+    <span class="k">def</span> <span class="nf">authenticate_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper function to authenticate the test user and set the JWT token in the request header.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">refresh</span> <span class="o">=</span> <span class="n">RefreshToken</span><span class="o">.</span><span class="n">for_user</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">credentials</span><span class="p">(</span><span class="n">HTTP_AUTHORIZATION</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">refresh</span><span class="o">.</span><span class="n">access_token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenreAPITests.test_unauthorized_access">
+<a class="viewcode-back" href="../../content.html#content.tests.GenreAPITests.test_unauthorized_access">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_unauthorized_access</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure unauthorized users don&#39;t receive access.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;genre-list&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_401_UNAUTHORIZED</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenreAPITests.test_get_genres">
+<a class="viewcode-back" href="../../content.html#content.tests.GenreAPITests.test_get_genres">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_get_genres</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure authorized users receive all genres as a list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">authenticate_user</span><span class="p">()</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;genre-list&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="s2">&quot;Action&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="s2">&quot;Comedy&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GenreAPITests.test_get_genre_detail">
+<a class="viewcode-back" href="../../content.html#content.tests.GenreAPITests.test_get_genre_detail">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_get_genre_detail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure authorized users can retrieve a genre by id.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">authenticate_user</span><span class="p">()</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;genre-detail&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">genre_action</span><span class="o">.</span><span class="n">id</span><span class="p">])</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">genre_action</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="VideoListAPITests">
+<a class="viewcode-back" href="../../content.html#content.tests.VideoListAPITests">[docs]</a>
+<span class="nd">@override_settings</span><span class="p">(</span><span class="n">MEDIA_ROOT</span><span class="o">=</span><span class="n">TemporaryDirectory</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">VideoListAPITests</span><span class="p">(</span><span class="n">APITestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="VideoListAPITests.setUp">
+<a class="viewcode-back" href="../../content.html#content.tests.VideoListAPITests.setUp">[docs]</a>
+    <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;django_rq.get_queue&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_queue</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">genre_action</span> <span class="o">=</span> <span class="n">GenreModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Action&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">genre_comedy</span> <span class="o">=</span> <span class="n">GenreModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Comedy&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">video_1</span> <span class="o">=</span> <span class="n">VideoModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Video 1&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Description 1&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">video_1</span><span class="o">.</span><span class="n">genres</span><span class="o">.</span><span class="n">set</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">genre_action</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">video_2</span> <span class="o">=</span> <span class="n">VideoModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Video 2&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Description 2&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">video_2</span><span class="o">.</span><span class="n">genres</span><span class="o">.</span><span class="n">set</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">genre_action</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">video_3</span> <span class="o">=</span> <span class="n">VideoModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Video 3&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Description 3&quot;</span><span class="p">,</span>
+            <span class="n">thumbnail_img</span><span class="o">=</span><span class="n">SimpleUploadedFile</span><span class="p">(</span>
+                <span class="s2">&quot;test_thumbnail.jpg&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;file_content&quot;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;image/jpeg&quot;</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">video_3</span><span class="o">.</span><span class="n">genres</span><span class="o">.</span><span class="n">set</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">genre_comedy</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">video_4</span> <span class="o">=</span> <span class="n">VideoModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Video 4&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Description 4&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">video_4</span><span class="o">.</span><span class="n">genres</span><span class="o">.</span><span class="n">set</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">genre_comedy</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">video_5</span> <span class="o">=</span> <span class="n">VideoModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Video 5&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Description 5&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">video_5</span><span class="o">.</span><span class="n">genres</span><span class="o">.</span><span class="n">set</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">genre_comedy</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">CustomUser</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">email</span><span class="o">=</span><span class="s2">&quot;test@user.com&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;testpassword&quot;</span><span class="p">,</span> <span class="n">is_active</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VideoListAPITests.authenticate_user">
+<a class="viewcode-back" href="../../content.html#content.tests.VideoListAPITests.authenticate_user">[docs]</a>
+    <span class="k">def</span> <span class="nf">authenticate_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper function to authenticate the test user and set the JWT token in the request header.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">refresh</span> <span class="o">=</span> <span class="n">RefreshToken</span><span class="o">.</span><span class="n">for_user</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">credentials</span><span class="p">(</span><span class="n">HTTP_AUTHORIZATION</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">refresh</span><span class="o">.</span><span class="n">access_token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VideoListAPITests.test_unauthorized_access">
+<a class="viewcode-back" href="../../content.html#content.tests.VideoListAPITests.test_unauthorized_access">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_unauthorized_access</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure unauthorized users don&#39;t receive access.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;video-list&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_401_UNAUTHORIZED</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VideoListAPITests.test_get_videos">
+<a class="viewcode-back" href="../../content.html#content.tests.VideoListAPITests.test_get_videos">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_get_videos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure authorized user receives all videos as a list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">authenticate_user</span><span class="p">()</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;video-list&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="mi">5</span><span class="p">)</span>
+
+        <span class="c1"># check thumbnail_url</span>
+        <span class="n">thumbnail_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">wsgi_request</span><span class="o">.</span><span class="n">scheme</span><span class="si">}</span><span class="s2">://</span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">wsgi_request</span><span class="o">.</span><span class="n">get_host</span><span class="p">()</span><span class="si">}{</span><span class="n">settings</span><span class="o">.</span><span class="n">MEDIA_URL</span><span class="si">}</span><span class="s2">videos/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">video_3</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">/thumbnail.jpg&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="s2">&quot;thumbnail_url&quot;</span><span class="p">],</span> <span class="n">thumbnail_url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;thumbnail_url&quot;</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VideoListAPITests.test_get_genre_videos">
+<a class="viewcode-back" href="../../content.html#content.tests.VideoListAPITests.test_get_genre_videos">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_get_genre_videos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure authorized user can filter for a specific genre.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">authenticate_user</span><span class="p">()</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;video-list&quot;</span><span class="p">)</span>
+        <span class="n">query_params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;genre&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">genre_action</span><span class="o">.</span><span class="n">id</span><span class="p">}</span>
+        <span class="n">url_with_params</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">?</span><span class="si">{</span><span class="n">urlencode</span><span class="p">(</span><span class="n">query_params</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url_with_params</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VideoListAPITests.test_limit_offset_videos">
+<a class="viewcode-back" href="../../content.html#content.tests.VideoListAPITests.test_limit_offset_videos">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_limit_offset_videos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure authorized user can filter by limit and offset.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">authenticate_user</span><span class="p">()</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;video-list&quot;</span><span class="p">)</span>
+        <span class="n">query_params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;genre&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">genre_comedy</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;offset&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;limit&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+        <span class="n">url_with_params</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">?</span><span class="si">{</span><span class="n">urlencode</span><span class="p">(</span><span class="n">query_params</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url_with_params</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;title&quot;</span><span class="p">],</span> <span class="s2">&quot;Video 4&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;title&quot;</span><span class="p">],</span> <span class="s2">&quot;Video 5&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="VideoDetailAPITests">
+<a class="viewcode-back" href="../../content.html#content.tests.VideoDetailAPITests">[docs]</a>
+<span class="nd">@override_settings</span><span class="p">(</span><span class="n">MEDIA_ROOT</span><span class="o">=</span><span class="n">TemporaryDirectory</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">VideoDetailAPITests</span><span class="p">(</span><span class="n">APITestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="VideoDetailAPITests.setUp">
+<a class="viewcode-back" href="../../content.html#content.tests.VideoDetailAPITests.setUp">[docs]</a>
+    <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;django_rq.get_queue&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_queue</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">genre_action</span> <span class="o">=</span> <span class="n">GenreModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Action&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">genre_comedy</span> <span class="o">=</span> <span class="n">GenreModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Comedy&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">video_1</span> <span class="o">=</span> <span class="n">VideoModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Video 1&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Description 1&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">video_1</span><span class="o">.</span><span class="n">genres</span><span class="o">.</span><span class="n">set</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">genre_action</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">video_2</span> <span class="o">=</span> <span class="n">VideoModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Video 2&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Description 2&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">video_2</span><span class="o">.</span><span class="n">genres</span><span class="o">.</span><span class="n">set</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">genre_action</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">video_3</span> <span class="o">=</span> <span class="n">VideoModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Video 3&quot;</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Description 3&quot;</span><span class="p">,</span>
+            <span class="n">video_file</span><span class="o">=</span><span class="n">SimpleUploadedFile</span><span class="p">(</span>
+                <span class="s2">&quot;test_video.mp4&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;file_content&quot;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;video/mp4&quot;</span>
+            <span class="p">),</span>
+            <span class="n">thumbnail_img</span><span class="o">=</span><span class="n">SimpleUploadedFile</span><span class="p">(</span>
+                <span class="s2">&quot;test_thumbnail.jpg&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;file_content&quot;</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;image/jpeg&quot;</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">video_3</span><span class="o">.</span><span class="n">genres</span><span class="o">.</span><span class="n">set</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">genre_comedy</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">video_4</span> <span class="o">=</span> <span class="n">VideoModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Video 4&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Description 4&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">video_4</span><span class="o">.</span><span class="n">genres</span><span class="o">.</span><span class="n">set</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">genre_comedy</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">video_5</span> <span class="o">=</span> <span class="n">VideoModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Video 5&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Description 5&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">video_5</span><span class="o">.</span><span class="n">genres</span><span class="o">.</span><span class="n">set</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">genre_comedy</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">CustomUser</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">email</span><span class="o">=</span><span class="s2">&quot;test@user.com&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;testpassword&quot;</span><span class="p">,</span> <span class="n">is_active</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VideoDetailAPITests.authenticate_user">
+<a class="viewcode-back" href="../../content.html#content.tests.VideoDetailAPITests.authenticate_user">[docs]</a>
+    <span class="k">def</span> <span class="nf">authenticate_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper function to authenticate the test user and set the JWT token in the request header.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">refresh</span> <span class="o">=</span> <span class="n">RefreshToken</span><span class="o">.</span><span class="n">for_user</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">credentials</span><span class="p">(</span><span class="n">HTTP_AUTHORIZATION</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">refresh</span><span class="o">.</span><span class="n">access_token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VideoDetailAPITests.test_unauthorized_access">
+<a class="viewcode-back" href="../../content.html#content.tests.VideoDetailAPITests.test_unauthorized_access">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_unauthorized_access</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure unauthorized users don&#39;t receive access.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;video-detail&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pk&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">video_3</span><span class="o">.</span><span class="n">pk</span><span class="p">})</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_401_UNAUTHORIZED</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VideoDetailAPITests.test_get_video_detail">
+<a class="viewcode-back" href="../../content.html#content.tests.VideoDetailAPITests.test_get_video_detail">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_get_video_detail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure authorized users can retrieve specific videos by id.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">authenticate_user</span><span class="p">()</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;video-detail&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pk&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">video_3</span><span class="o">.</span><span class="n">pk</span><span class="p">})</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;json&quot;</span><span class="p">)</span>
+
+        <span class="n">video_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">wsgi_request</span><span class="o">.</span><span class="n">scheme</span><span class="si">}</span><span class="s2">://</span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">wsgi_request</span><span class="o">.</span><span class="n">get_host</span><span class="p">()</span><span class="si">}</span><span class="s2">/api/videos/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">video_3</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">/stream/&quot;</span>
+        <span class="n">thumbnail_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">wsgi_request</span><span class="o">.</span><span class="n">scheme</span><span class="si">}</span><span class="s2">://</span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">wsgi_request</span><span class="o">.</span><span class="n">get_host</span><span class="p">()</span><span class="si">}{</span><span class="n">settings</span><span class="o">.</span><span class="n">MEDIA_URL</span><span class="si">}</span><span class="s2">videos/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">video_3</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">/thumbnail.jpg&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">video_3</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">video_3</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;genres&quot;</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;video_url&quot;</span><span class="p">],</span> <span class="n">video_url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;thumbnail_url&quot;</span><span class="p">],</span> <span class="n">thumbnail_url</span><span class="p">)</span></div>
+</div>
+
+
+
+
+<div class="viewcode-block" id="VideoStreamAPITests">
+<a class="viewcode-back" href="../../content.html#content.tests.VideoStreamAPITests">[docs]</a>
+<span class="nd">@override_settings</span><span class="p">(</span><span class="n">MEDIA_ROOT</span><span class="o">=</span><span class="n">TemporaryDirectory</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">VideoStreamAPITests</span><span class="p">(</span><span class="n">APITestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="VideoStreamAPITests.setUp">
+<a class="viewcode-back" href="../../content.html#content.tests.VideoStreamAPITests.setUp">[docs]</a>
+    <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;django_rq.get_queue&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_queue</span><span class="p">):</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">MEDIA_ROOT</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">CustomUser</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">email</span><span class="o">=</span><span class="s2">&quot;test@user.com&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;testpassword&quot;</span><span class="p">,</span> <span class="n">is_active</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">genre_action</span> <span class="o">=</span> <span class="n">GenreModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Action&quot;</span><span class="p">)</span>
+
+        <span class="n">test_video_path</span> <span class="o">=</span> <span class="s2">&quot;media/test_assets/test_video_1.mp4&quot;</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">test_video_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">video_file</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">video_1</span> <span class="o">=</span> <span class="n">VideoModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Video 1&quot;</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Description 1&quot;</span><span class="p">,</span>
+                <span class="n">video_file</span><span class="o">=</span><span class="n">File</span><span class="p">(</span><span class="n">video_file</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test_video_1.mp4&quot;</span><span class="p">),</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">video_1</span><span class="o">.</span><span class="n">genres</span><span class="o">.</span><span class="n">set</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">genre_action</span><span class="p">])</span>
+
+        <span class="c1"># create master playlist file manuel</span>
+        <span class="n">create_master_playlist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">video_1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VideoStreamAPITests.authenticate_user">
+<a class="viewcode-back" href="../../content.html#content.tests.VideoStreamAPITests.authenticate_user">[docs]</a>
+    <span class="k">def</span> <span class="nf">authenticate_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper function to authenticate the test user and set the JWT token in the request header.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">refresh</span> <span class="o">=</span> <span class="n">RefreshToken</span><span class="o">.</span><span class="n">for_user</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">credentials</span><span class="p">(</span><span class="n">HTTP_AUTHORIZATION</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">refresh</span><span class="o">.</span><span class="n">access_token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+    <span class="c1"># TODO: Add token-based authentication to media URLs for secure access</span>
+    <span class="c1"># def test_unauthorized_access(self):</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#     Ensure unauthorized users don&#39;t receive access.</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#     url = reverse(&#39;video-stream&#39;, kwargs={&#39;pk&#39;: self.video_1.pk})</span>
+    <span class="c1">#     response = self.client.get(url)</span>
+
+    <span class="c1">#     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)</span>
+
+<div class="viewcode-block" id="VideoStreamAPITests.test_get_non_existing_video">
+<a class="viewcode-back" href="../../content.html#content.tests.VideoStreamAPITests.test_get_non_existing_video">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_get_non_existing_video</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure if the video doesn&#39;t exist error code 404 will be send as response.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">authenticate_user</span><span class="p">()</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;video-stream&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pk&quot;</span><span class="p">:</span> <span class="mi">999</span><span class="p">})</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_404_NOT_FOUND</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VideoStreamAPITests.test_get_video_stream">
+<a class="viewcode-back" href="../../content.html#content.tests.VideoStreamAPITests.test_get_video_stream">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_get_video_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure authorized users can retrieve specific videos by id.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">authenticate_user</span><span class="p">()</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;video-stream&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pk&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">video_1</span><span class="o">.</span><span class="n">id</span><span class="p">})</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">],</span> <span class="s2">&quot;application/vnd.apple.mpegurl&quot;</span><span class="p">)</span>
+
+        <span class="n">clean_title</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">video_1</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">expected_playlist_content</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;#EXTM3U&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#EXT-X-VERSION:3&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#EXT-X-STREAM-INF:BANDWIDTH=800000,RESOLUTION=640x360&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">clean_title</span><span class="si">}</span><span class="s2">_480p.m3u8&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#EXT-X-STREAM-INF:BANDWIDTH=1400000,RESOLUTION=1280x720&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">clean_title</span><span class="si">}</span><span class="s2">_720p.m3u8&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#EXT-X-STREAM-INF:BANDWIDTH=2800000,RESOLUTION=1920x1080&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">clean_title</span><span class="si">}</span><span class="s2">_1080p.m3u8&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="n">streaming_content</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">streaming_content</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="n">actual_playlist_content</span> <span class="o">=</span> <span class="n">streaming_content</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">expected_playlist_content</span><span class="p">,</span> <span class="n">actual_playlist_content</span><span class="p">)</span></div>
+</div>
+
+
+
+
+<div class="viewcode-block" id="VideoSegmentAPITests">
+<a class="viewcode-back" href="../../content.html#content.tests.VideoSegmentAPITests">[docs]</a>
+<span class="nd">@override_settings</span><span class="p">(</span><span class="n">MEDIA_ROOT</span><span class="o">=</span><span class="n">TemporaryDirectory</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">VideoSegmentAPITests</span><span class="p">(</span><span class="n">APITestCase</span><span class="p">):</span>
+
+<div class="viewcode-block" id="VideoSegmentAPITests.setUp">
+<a class="viewcode-back" href="../../content.html#content.tests.VideoSegmentAPITests.setUp">[docs]</a>
+    <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;django_rq.get_queue&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_queue</span><span class="p">):</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">MEDIA_ROOT</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">CustomUser</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">email</span><span class="o">=</span><span class="s2">&quot;test@user.com&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;testpassword&quot;</span><span class="p">,</span> <span class="n">is_active</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">genre_action</span> <span class="o">=</span> <span class="n">GenreModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Action&quot;</span><span class="p">)</span>
+
+        <span class="c1"># set up test video</span>
+        <span class="n">test_video_path</span> <span class="o">=</span> <span class="s2">&quot;media/test_assets/test_video_1.mp4&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">test_video_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">video_file</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">video_1</span> <span class="o">=</span> <span class="n">VideoModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+                <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Video 1&quot;</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Description 1&quot;</span><span class="p">,</span>
+                <span class="n">video_file</span><span class="o">=</span><span class="n">File</span><span class="p">(</span><span class="n">video_file</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test_video_1.mp4&quot;</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">video_1</span><span class="o">.</span><span class="n">genres</span><span class="o">.</span><span class="n">set</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">genre_action</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_mock_files</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">video_1</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="s2">&quot;480&quot;</span><span class="p">)</span></div>
+
+         
+    
+    <span class="k">def</span> <span class="nf">_create_mock_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">video_instance</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="s2">&quot;480&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a mock m3u8 file and a mock .ts file for the video.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">video_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">MEDIA_ROOT</span><span class="p">,</span> <span class="s1">&#39;videos&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">video_instance</span><span class="o">.</span><span class="n">pk</span><span class="p">))</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">video_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_mock_m3u8_file</span><span class="p">(</span><span class="n">video_folder</span><span class="p">,</span> <span class="n">video_instance</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_mock_ts_file</span><span class="p">(</span><span class="n">video_folder</span><span class="p">,</span> <span class="n">video_instance</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
+        
+    
+    <span class="k">def</span> <span class="nf">_create_mock_m3u8_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a mock m3u8 file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">m3u8_content</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+            <span class="s2">&quot;#EXTM3U&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#EXT-X-VERSION:3&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#EXT-X-TARGETDURATION:17&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#EXT-X-MEDIA-SEQUENCE:0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#EXTINF:16.683333,&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">title</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s2">p0.ts&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#EXTINF:8.341667,&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">title</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s2">p1.ts&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#EXTINF:7.474133,&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">title</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s2">p2.ts&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#EXTINF:12.746067,&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">title</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s2">p3.ts&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#EXTINF:6.506500,&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">title</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s2">p4.ts&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#EXTINF:5.972633,&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">title</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s2">p5.ts&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#EXT-X-ENDLIST&quot;</span><span class="p">,</span>
+        <span class="p">])</span>
+        <span class="n">m3u8_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">title</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s2">p.m3u8&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">m3u8_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">m3u8_content</span><span class="p">)</span>
+            
+
+    <span class="k">def</span> <span class="nf">_create_mock_ts_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">resolution</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a mock .ts file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ts_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">title</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s2">p0.ts&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ts_path</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ts_file</span><span class="p">:</span>
+            <span class="n">ts_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span> 
+    
+    
+
+<div class="viewcode-block" id="VideoSegmentAPITests.test_get_m3u8_file">
+<a class="viewcode-back" href="../../content.html#content.tests.VideoSegmentAPITests.test_get_m3u8_file">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_get_m3u8_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure users can retrieve specific m3u8 video file by id.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span>
+            <span class="s2">&quot;video-segment&quot;</span><span class="p">,</span>
+            <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pk&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">video_1</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="s2">&quot;video_1_480p.m3u8&quot;</span><span class="p">},</span>
+        <span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">],</span> <span class="s2">&quot;application/vnd.apple.mpegurl&quot;</span><span class="p">)</span>
+
+        <span class="n">expected_lines_start</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;#EXTM3U&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#EXT-X-VERSION:3&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#EXT-X-TARGETDURATION&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#EXTINF&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#EXT-X-ENDLIST&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+
+        <span class="n">streaming_content</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">streaming_content</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="n">actual_playlist_content</span> <span class="o">=</span> <span class="n">streaming_content</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+
+        <span class="c1"># Check if each expected line start exists in actual playlist content</span>
+        <span class="k">for</span> <span class="n">expected_start</span> <span class="ow">in</span> <span class="n">expected_lines_start</span><span class="p">:</span>
+            <span class="n">found</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">expected_start</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">actual_playlist_content</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">found</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">expected_start</span><span class="si">}</span><span class="s2">&#39; not found in playlist content&quot;</span><span class="p">)</span></div>
+
+            
+            
+
+<div class="viewcode-block" id="VideoSegmentAPITests.test_get_ts_file">
+<a class="viewcode-back" href="../../content.html#content.tests.VideoSegmentAPITests.test_get_ts_file">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_get_ts_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Test for retrieving specific TS segment file by ID.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span>
+            <span class="s2">&quot;video-segment&quot;</span><span class="p">,</span>
+            <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pk&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">video_1</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;filename&quot;</span><span class="p">:</span> <span class="s2">&quot;video_1_480p0.ts&quot;</span><span class="p">},</span>
+        <span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">],</span> <span class="s2">&quot;video/MP2T&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+
+
+<div class="viewcode-block" id="BillboardVideoAPITests">
+<a class="viewcode-back" href="../../content.html#content.tests.BillboardVideoAPITests">[docs]</a>
+<span class="k">class</span> <span class="nc">BillboardVideoAPITests</span><span class="p">(</span><span class="n">APITestCase</span><span class="p">):</span>
+    
+<div class="viewcode-block" id="BillboardVideoAPITests.setUp">
+<a class="viewcode-back" href="../../content.html#content.tests.BillboardVideoAPITests.setUp">[docs]</a>
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_genres</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_videos</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_user</span><span class="p">()</span></div>
+
+    
+    <span class="k">def</span> <span class="nf">_create_genres</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Create genre models &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">genre_action</span> <span class="o">=</span> <span class="n">GenreModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Action&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">genre_comedy</span> <span class="o">=</span> <span class="n">GenreModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Comedy&quot;</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">_create_videos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">count</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Create video models &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">count</span><span class="p">):</span>
+            <span class="n">videoname</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;video_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">video</span> <span class="o">=</span> <span class="n">VideoModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Video </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Description </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">video</span><span class="o">.</span><span class="n">genres</span><span class="o">.</span><span class="n">set</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">genre_comedy</span><span class="p">])</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">videoname</span><span class="p">,</span> <span class="n">video</span><span class="p">)</span>
+            
+    <span class="k">def</span> <span class="nf">_create_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Create user model &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">CustomUser</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span>
+            <span class="n">email</span><span class="o">=</span><span class="s2">&quot;test@user.com&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;testpassword&quot;</span><span class="p">,</span> <span class="n">is_active</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>    
+            
+    <span class="k">def</span> <span class="nf">_authenticate_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper function to authenticate the test user and set the JWT token in the request header.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">refresh</span> <span class="o">=</span> <span class="n">RefreshToken</span><span class="o">.</span><span class="n">for_user</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">credentials</span><span class="p">(</span><span class="n">HTTP_AUTHORIZATION</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">refresh</span><span class="o">.</span><span class="n">access_token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            
+<div class="viewcode-block" id="BillboardVideoAPITests.test_get_random_billboard_video">
+<a class="viewcode-back" href="../../content.html#content.tests.BillboardVideoAPITests.test_get_random_billboard_video">[docs]</a>
+    <span class="k">def</span> <span class="nf">test_get_random_billboard_video</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensure the user gets a random video data from the newest 10 videos.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_authenticate_user</span><span class="p">()</span>
+        
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s2">&quot;video-billboard&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">HTTP_200_OK</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+        
+        <span class="c1"># check if video is one of the 10 newest videos</span>
+        <span class="n">latest_videos_pks</span> <span class="o">=</span> <span class="n">VideoModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-created_at&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;pk&#39;</span><span class="p">,</span> <span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">latest_videos_pks</span><span class="p">)</span></div>
+</div>
+
+    
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Ricardo Geada.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
